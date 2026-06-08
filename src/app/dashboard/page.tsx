@@ -45,7 +45,7 @@ export default function Dashboard() {
     const loadData = async () => {
       try {
         // Simulamos usuario (debes cambiar esto por una llamada a tu API /auth/me)
-        setUser({ id: '6f6cc1e6...', email: 'admin@smartbox.com', name: 'Admin', role: 'SUPER_ADMIN' });
+        setUser({ id: '6f6cc1e6...', email: 'example@smartbox.com', name: 'Admin', role: 'SUPER_ADMIN' });
         
         const rolesRes = await apiFetch('/roles'); // Endpoint que debe retornar [{id, name}, ...]
         if (rolesRes.ok) {
@@ -99,6 +99,15 @@ export default function Dashboard() {
     }
   };
 
+  const resetForm = () => {
+    setNewUserName('');
+    setNewUserEmail('');
+    setNewUserPassword('');
+    setNewUserRole('');
+    setFormError('');
+    setFormSuccess('');
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-200">
@@ -143,7 +152,10 @@ export default function Dashboard() {
               {/* ➕ Botón para abrir el Modal (Solo visible/útil para administradores) */}
               {user?.role === 'SUPER_ADMIN' && (
                 <button
-                  onClick={() => setIsModalOpen(true)}
+                 onClick={() => {
+                    resetForm();
+                    setIsModalOpen(true);
+                  }}
                   className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-sm transition-colors flex items-center gap-2"
                 >
                   <span>👤+</span> Crear Usuario
