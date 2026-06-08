@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { apiFetch } from '../../lib/api';
@@ -29,24 +30,18 @@ export default function LoginPage() {
         }),
       });
 
-     const data = await res.json();
-      console.log("Data:", data);
-
+      const data = await res.json();
       if (res.ok && data.access_token) {
         localStorage.setItem('token', data.access_token);
         document.cookie = `token=${data.access_token}; path=/; max-age=86400; SameSite=Strict`;
         
-        // 1. Le avisa al enrutador de Next.js que actualice sus datos de servidor/cookies
         router.refresh(); 
-        
-        // 2. Ahora sí, navega de forma limpia sin recargar la app
         router.push('/dashboard');
-      }else {
+      } else {
         setError(data.message || 'Credenciales inválidas. Inténtalo de nuevo.');
       }
     } catch (error) {
       console.error(error);
-
       setError(
         'No se pudo conectar con el servidor. Verifica que tu backend esté encendido.'
       );
@@ -87,14 +82,26 @@ export default function LoginPage() {
             onChange={(e) => setEmail(e.target.value)}
           />
 
-          <Input
-            label="Contraseña"
-            type="password"
-            required
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="space-y-1.5">
+            <Input
+              label="Contraseña"
+              type="password"
+              required
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            
+            {/* ENLACE DE RECUPERACIÓN */}
+            <div className="text-right">
+              <Link 
+                href="/forgot-password" 
+                className="text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+              >
+                ¿Olvidaste tu contraseña?
+              </Link>
+            </div>
+          </div>
 
           <Button type="submit" isLoading={isLoading}>
             Entrar
