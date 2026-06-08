@@ -4,24 +4,29 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
+import { apiFetch } from '../../lib/api';
 
 export default function LoginPage() {
   const router = useRouter();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const login = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); 
+    e.preventDefault();
+
     setIsLoading(true);
     setError('');
 
     try {
-      const res = await fetch('http://localhost:3000/auth/login', {
+      const res = await apiFetch('/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       });
 
       const data = await res.json();
@@ -30,10 +35,17 @@ export default function LoginPage() {
         localStorage.setItem('token', data.access_token);
         router.push('/dashboard');
       } else {
-        setError(data.message || 'Credenciales inválidas. Inténtalo de nuevo.');
+        setError(
+          data.message ||
+          'Credenciales inválidas. Inténtalo de nuevo.'
+        );
       }
-    } catch (err) {
-      setError('No se pudo conectar con el servidor. Verifica que tu backend esté encendido.');
+    } catch (error) {
+      console.error(error);
+
+      setError(
+        'No se pudo conectar con el servidor. Verifica que tu backend esté encendido.'
+      );
     } finally {
       setIsLoading(false);
     }
