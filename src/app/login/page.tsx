@@ -29,16 +29,20 @@ export default function LoginPage() {
         }),
       });
 
-      const data = await res.json();
+     const data = await res.json();
+      console.log("Data:", data);
 
       if (res.ok && data.access_token) {
         localStorage.setItem('token', data.access_token);
+        document.cookie = `token=${data.access_token}; path=/; max-age=86400; SameSite=Strict`;
+        
+        // 1. Le avisa al enrutador de Next.js que actualice sus datos de servidor/cookies
+        router.refresh(); 
+        
+        // 2. Ahora sí, navega de forma limpia sin recargar la app
         router.push('/dashboard');
-      } else {
-        setError(
-          data.message ||
-          'Credenciales inválidas. Inténtalo de nuevo.'
-        );
+      }else {
+        setError(data.message || 'Credenciales inválidas. Inténtalo de nuevo.');
       }
     } catch (error) {
       console.error(error);
