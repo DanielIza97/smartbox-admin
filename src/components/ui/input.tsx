@@ -1,19 +1,40 @@
-import { InputHTMLAttributes } from 'react';
+'use client';
+
+import { InputHTMLAttributes, useState } from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
 }
 
-export function Input({ label, ...props }: InputProps) {
+export function Input({ label, type, ...props }: InputProps) {
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Si el tipo original es password y showPassword es true, cambiamos a 'text'
+  const inputType = type === 'password' && showPassword ? 'text' : type;
+
   return (
     <div>
       <label className="block text-sm font-medium text-slate-700 mb-1.5">
         {label}
       </label>
-      <input
-        {...props}
-        className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition-all text-sm"
-      />
+      <div className="relative">
+        <input
+          {...props}
+          type={inputType}
+          className="w-full pl-4 pr-12 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition-all text-sm"
+        />
+        
+        {/* Renderiza el botón solo si el input es de tipo password */}
+        {type === 'password' && (
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-semibold px-2 py-1 select-none transition-colors"
+          >
+            {showPassword ? 'Ocultar' : 'Mostrar'}
+          </button>
+        )}
+      </div>
     </div>
   );
 }

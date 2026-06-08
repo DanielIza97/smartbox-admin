@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { apiFetch } from '@/src/lib/api';
+import { Input } from '../../components/ui/input';
+import { Button } from '../../components/ui/button'; 
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -17,7 +19,6 @@ export default function ForgotPasswordPage() {
     setError('');
 
     try {
-      // Reutilizando tu apiFetch personalizado
       const res = await apiFetch('/auth/forgot-password', {
         method: 'POST',
         body: JSON.stringify({ email }),
@@ -31,7 +32,6 @@ export default function ForgotPasswordPage() {
 
       setMessage('Si el correo existe, se ha enviado un enlace de recuperación.');
     } catch (err: any) {
-      // Maneja tanto errores del backend como caídas del servidor
       setError(err.message || 'No se pudo conectar con el servidor.');
     } finally {
       setLoading(false);
@@ -53,19 +53,14 @@ export default function ForgotPasswordPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              Correo Electrónico
-            </label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-950 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none transition-colors"
-              placeholder="example@email.com"
-            />
-          </div>
+          <Input
+            label="Correo Electrónico"
+            type="email"
+            required
+            placeholder="example@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
           {message && (
             <div className="p-3 bg-green-50 border border-green-200 text-green-600 rounded-lg text-sm font-medium">
@@ -79,19 +74,15 @@ export default function ForgotPasswordPage() {
             </div>
           )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-xl bg-blue-600 py-2.5 font-semibold text-sm text-white hover:bg-blue-700 disabled:bg-slate-300 transition-colors shadow-sm"
-          >
+          <Button type="submit" isLoading={loading}>
             {loading ? 'Enviando...' : 'Enviar enlace'}
-          </button>
+          </Button>
 
           {/* BOTÓN ATRÁS */}
           <div className="text-center pt-2">
             <Link
               href="/login"
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-800 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-indigo-600 transition-colors group"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -99,12 +90,12 @@ export default function ForgotPasswordPage() {
                 viewBox="0 0 24 24"
                 strokeWidth={2}
                 stroke="currentColor"
-                className="w-3.5 h-3.5"
+                className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition-colors"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  d="M10.5 19.5L3 Lightning7.5m0 0l7.5-7.5M3 12h18"
+                  d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
                 />
               </svg>
               Volver al inicio de sesión

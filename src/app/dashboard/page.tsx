@@ -3,8 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Sidebar } from '../../components/ui/sidebar';
+import { Input } from '../../components/ui/input';   
+import { Button } from '../../components/ui/button'; 
+import { apiFetch } from '../../lib/api';
 
-// Interfaz para tipar el usuario basado en la respuesta real de tu NestJS Auth
 interface UserProfile {
   id: string;
   email: string;
@@ -12,34 +14,90 @@ interface UserProfile {
   role: string;
 }
 
+interface Role {
+  id: string;
+  name: string;
+}
+
 export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [roles, setRoles] = useState<Role[]>([]);
+
+  // Estados para el Modal de creación de usuario
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newUserName, setNewUserName] = useState('');
+  const [newUserEmail, setNewUserEmail] = useState('');
+  const [newUserPassword, setNewUserPassword] = useState('');
+  const [newUserRole, setNewUserRole] = useState('');
+  const [isCreating, setIsCreating] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [formSuccess, setFormSuccess] = useState('');
 
   useEffect(() => {
-    // 1. Verificación del estado de autenticación en el cliente
     const token = localStorage.getItem('token');
-    
     if (!token) {
       router.push('/login');
       return;
     }
 
-    // 2. Simulación de lectura del perfil (En producción harías un fetch a /api/v1/auth/profile)
-    try {
-      setUser({
-        id: '6f6cc1e6-38f0-4191-8534-3d85d71f84a2',
-        email: 'admin@smartbox.com',
-        name: 'Admin',
-        role: 'SUPER_ADMIN',
-      });
-    } catch (err) {
-      console.error('Error al cargar perfil de usuario', err);
-    } finally {
-      setIsLoading(false);
-    }
+    const loadData = async () => {
+      try {
+        // Simulamos usuario (debes cambiar esto por una llamada a tu API /auth/me)
+        setUser({ id: '6f6cc1e6...', email: 'admin@smartbox.com', name: 'Admin', role: 'SUPER_ADMIN' });
+        
+        const rolesRes = await apiFetch('/roles'); // Endpoint que debe retornar [{id, name}, ...]
+        if (rolesRes.ok) {
+          const rolesData = await rolesRes.json();
+          setRoles(rolesData);
+        }
+      } catch (err) {
+        console.error('Error al cargar datos', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadData();
   }, [router]);
+
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newUserRole) {
+      setFormError('Por favor, selecciona un rol válido.');
+      return;
+    }
+
+    setIsCreating(true);
+    setFormError('');
+    setFormSuccess('');
+
+   try {
+      // 4. Enviamos directamente el nombre del rol al backend
+      const res = await apiFetch('/auth/register-internal', { 
+        method: 'POST',
+        body: JSON.stringify({
+          name: newUserName,
+          email: newUserEmail,
+          password: newUserPassword,
+          roleName: newUserRole,
+        }),
+      });
+
+      if (res.ok) {
+        setFormSuccess('Usuario creado con éxito.');
+        setNewUserName(''); setNewUserEmail(''); setNewUserPassword(''); setNewUserRole('');
+        setTimeout(() => setIsModalOpen(false), 1500);
+      } else {
+        const data = await res.json();
+        setFormError(data.message || 'Error al crear el usuario.');
+      }
+    } catch (err) {
+      setFormError('No se pudo conectar con el servidor.');
+    } finally {
+      setIsCreating(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -52,7 +110,6 @@ export default function Dashboard() {
     );
   }
 
-  // Métricas de negocio alineadas al Stack IoT, Reservas y Pagos del Backend
   const systemStats = [
     { title: 'Pods SmartBox (IoT)', value: '12 / 15', sub: '3 en mantenimiento (active/offline)', color: 'border-l-teal-500', icon: '📦' },
     { title: 'Reservas Activas (Hoy)', value: '42', sub: 'Estatus: pending / active', color: 'border-l-indigo-500', icon: '📅' },
@@ -60,7 +117,6 @@ export default function Dashboard() {
     { title: 'Estado Broker EMQX', value: 'Estable', sub: 'Heartbeats ESP32 estables', color: 'border-l-amber-500', icon: '⚡' },
   ];
 
-  // Datos de monitoreo en espejo con la capa de persistencia de tu Postgres/Prisma
   const recentReservations = [
     { id: 'RES-2026-001', user: 'Carlos Mendoza', pod: 'Pod-003', status: 'active', time: '10:00 - 12:00' },
     { id: 'RES-2026-002', user: 'Ana María Silva', pod: 'Pod-001', status: 'paid', time: '13:00 - 14:30' },
@@ -69,19 +125,12 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
-      {/* Barra Lateral - Ancho fijo de 64 (16rem) */}
       <Sidebar />
 
-      {/* Contenedor Principal */}
       <main className="flex-1 ml-64 bg-slate-50 min-h-screen">
-        {/* Contenedor con "aire":
-            - p-8: Espaciado interno en todos los lados.
-            - max-w-[1400px]: Evita que en pantallas muy anchas las tablas se deformen.
-            - mx-auto: Centra el contenido si la pantalla es muy grande.
-        */}
         <div className="p-8 px-10 max-w-[1500px] mx-auto space-y-8">
           
-          {/* Encabezado */}
+          {/* Encabezado con disparador de Modal */}
           <header className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <div>
               <h1 className="text-2xl font-bold text-slate-950 tracking-tight">Panel de Control General</h1>
@@ -89,11 +138,24 @@ export default function Dashboard() {
                 Bienvenido de vuelta, <span className="font-semibold text-slate-700">{user?.name}</span>
               </p>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
-              <span className="text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-full uppercase tracking-wider">
-                {user?.role}
-              </span>
+            
+            <div className="flex items-center gap-4">
+              {/* ➕ Botón para abrir el Modal (Solo visible/útil para administradores) */}
+              {user?.role === 'SUPER_ADMIN' && (
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-sm transition-colors flex items-center gap-2"
+                >
+                  <span>👤+</span> Crear Usuario
+                </button>
+              )}
+
+              <div className="flex items-center gap-3 border-l border-slate-100 pl-4">
+                <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                <span className="text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-full uppercase tracking-wider">
+                  {user?.role}
+                </span>
+              </div>
             </div>
           </header>
 
@@ -158,6 +220,83 @@ export default function Dashboard() {
           </section>
         </div>
       </main>
+
+      {/* MODAL OVERLAY: Creación de Usuarios por SuperAdmin */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl border border-slate-100 space-y-5 relative">
+            
+            <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+              <h3 className="text-lg font-bold text-slate-950">Registrar Nuevo Operador</h3>
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 text-xl font-medium"
+              >
+                ✕
+              </button>
+            </div>
+
+            {formError && <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm font-medium">{formError}</div>}
+            {formSuccess && <div className="p-3 bg-green-50 border border-green-200 text-green-600 rounded-lg text-sm font-medium">{formSuccess}</div>}
+
+            <form onSubmit={handleCreateUser} className="space-y-4">
+              <Input
+                label="Nombre Completo"
+                type="text"
+                required
+                placeholder="Ej. Nombre del Staff"
+                value={newUserName}
+                onChange={(e) => setNewUserName(e.target.value)}
+              />
+
+              <Input
+                label="Correo Electrónico"
+                type="email"
+                required
+                placeholder="staff@smartbox.com"
+                value={newUserEmail}
+                onChange={(e) => setNewUserEmail(e.target.value)}
+              />
+
+              <Input
+                label="Contraseña Temporal"
+                type="password"
+                required
+                minLength={6}
+                placeholder="••••••••"
+                value={newUserPassword}
+                onChange={(e) => setNewUserPassword(e.target.value)}
+              />
+
+              <div className="flex flex-col gap-1.5">
+                <label className="block text-sm font-medium text-slate-700">
+                  Asignación de Rol
+                </label>
+                <select 
+                  value={newUserRole} 
+                  onChange={(e) => setNewUserRole(e.target.value)}
+                  className="w-full pl-4 pr-10 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition-all text-sm appearance-none"
+                >
+                  <option value="" className="text-slate-500 bg-white" disabled>
+                    Selecciona un rol...
+                  </option>
+                  {roles.map((role) => (
+                    <option key={role.id} value={role.name}>
+                      {role.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="pt-2">
+                <Button type="submit" isLoading={isCreating}>
+                  {isCreating ? 'Guardando...' : 'Confirmar Registro'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

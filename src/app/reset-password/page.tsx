@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { apiFetch } from '../../lib/api';
+import { Input } from '../../components/ui/input';  
+import { Button } from '../../components/ui/button'; 
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
@@ -33,7 +35,6 @@ export default function ResetPasswordPage() {
     setError('');
 
     try {
-      // Reutilizando apiFetch: Pasamos el token limpio como query param
       const res = await apiFetch(`/auth/reset-password?token=${token}`, {
         method: 'POST',
         body: JSON.stringify({ password }), 
@@ -78,34 +79,25 @@ export default function ResetPasswordPage() {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Nueva Contraseña
-              </label>
-              <input
-                type="password"
-                required
-                minLength={6}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-950 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none transition-colors"
-                placeholder="••••••••"
-              />
-            </div>
+            
+            <Input
+              label="Nueva Contraseña"
+              type="password"
+              required
+              minLength={6}
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Confirmar Contraseña
-              </label>
-              <input
-                type="password"
-                required
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-950 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none transition-colors"
-                placeholder="••••••••"
-              />
-            </div>
+            <Input
+              label="Confirmar Contraseña"
+              type="password"
+              required
+              placeholder="••••••••"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
 
             {message && (
               <div className="p-3 bg-green-50 border border-green-200 text-green-600 rounded-lg text-sm font-medium">
@@ -119,13 +111,9 @@ export default function ResetPasswordPage() {
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-xl bg-blue-600 py-2.5 font-semibold text-sm text-white hover:bg-blue-700 disabled:bg-slate-300 transition-colors shadow-sm"
-            >
+            <Button type="submit" isLoading={loading}>
               {loading ? 'Actualizando...' : 'Restablecer contraseña'}
-            </button>
+            </Button>
           </form>
         )}
       </div>
