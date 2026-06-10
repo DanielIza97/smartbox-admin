@@ -19,6 +19,13 @@ interface Role {
   name: string;
 }
 
+interface UserItem {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
 export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState<UserProfile | null>(null);
