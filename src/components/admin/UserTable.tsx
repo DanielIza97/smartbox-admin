@@ -4,7 +4,15 @@ import { useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { User } from '@/types'; 
 
-function ConfirmationModal({ isOpen, title, message, onConfirm, onCancel }: any) {
+interface ConfirmationModalProps {
+  isOpen: boolean;
+  title: string;
+  message: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+function ConfirmationModal({ isOpen, title, message, onConfirm, onCancel }: ConfirmationModalProps) {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 animate-in fade-in duration-200">
@@ -86,7 +94,6 @@ export function UserTable({ users, onDelete }: { users: User[], onDelete: () => 
         </div>
       </div>
 
-      {/* Modal de Confirmación */}
       <ConfirmationModal 
         isOpen={!!userToDelete}
         title="¿Eliminar usuario?"

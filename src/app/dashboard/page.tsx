@@ -3,26 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Sidebar } from '../../components/ui/sidebar';
-import { Input } from '../../components/ui/input';   
-import { Button } from '../../components/ui/button'; 
 import { apiFetch } from '../../lib/api';
-import { User, Role } from '@/types';
+import { User } from '@/types';
 
 export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [roles, setRoles] = useState<Role[]>([]);
-
-  // Estados para el Modal de creación de usuario
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newUserName, setNewUserName] = useState('');
-  const [newUserEmail, setNewUserEmail] = useState('');
-  const [newUserPassword, setNewUserPassword] = useState('');
-  const [newUserRole, setNewUserRole] = useState('');
-  const [isCreating, setIsCreating] = useState(false);
-  const [formError, setFormError] = useState('');
-  const [formSuccess, setFormSuccess] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -35,12 +22,6 @@ export default function Dashboard() {
       try {
         // Simulamos usuario
         setUser({ id: '6f6cc1e6...', email: 'example@smartbox.com', name: 'Admin', role: 'SUPER_ADMIN' });
-        
-        const rolesRes = await apiFetch('/roles'); 
-        if (rolesRes.ok) {
-          const rolesData = await rolesRes.json();
-          setRoles(rolesData);
-        }
       } catch (err) {
         console.error('Error al cargar datos', err);
       } finally {
@@ -49,52 +30,6 @@ export default function Dashboard() {
     };
     loadData();
   }, [router]);
-
-  const handleCreateUser = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newUserRole) {
-      setFormError('Por favor, selecciona un rol válido.');
-      return;
-    }
-
-    setIsCreating(true);
-    setFormError('');
-    setFormSuccess('');
-
-   try {
-      const res = await apiFetch('/auth/register-internal', { 
-        method: 'POST',
-        body: JSON.stringify({
-          name: newUserName,
-          email: newUserEmail,
-          password: newUserPassword,
-          roleName: newUserRole,
-        }),
-      });
-
-      if (res.ok) {
-        setFormSuccess('Usuario creado con éxito.');
-        setNewUserName(''); setNewUserEmail(''); setNewUserPassword(''); setNewUserRole('');
-        setTimeout(() => setIsModalOpen(false), 1500);
-      } else {
-        const data = await res.json();
-        setFormError(data.message || 'Error al crear el usuario.');
-      }
-    } catch (err) {
-      setFormError('No se pudo conectar con el servidor.');
-    } finally {
-      setIsCreating(false);
-    }
-  };
-
-  const resetForm = () => {
-    setNewUserName('');
-    setNewUserEmail('');
-    setNewUserPassword('');
-    setNewUserRole('');
-    setFormError('');
-    setFormSuccess('');
-  };
 
   if (isLoading) {
     return (
@@ -127,7 +62,7 @@ export default function Dashboard() {
       <main className="flex-1 ml-64 bg-slate-50 min-h-screen">
         <div className="p-8 px-10 max-w-[1500px] mx-auto space-y-8">
           
-          {/* Encabezado con disparador de Modal */}
+          {/* Encabezado */}
           <header className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <div>
               <h1 className="text-2xl font-bold text-slate-950 tracking-tight">Panel de Control General</h1>
@@ -137,19 +72,6 @@ export default function Dashboard() {
             </div>
             
             <div className="flex items-center gap-4">
-              {/* ➕ Botón para abrir el Modal (Solo visible/útil para administradores) */}
-              {user?.role === 'SUPER_ADMIN' && (
-                <button
-                 onClick={() => {
-                    resetForm();
-                    setIsModalOpen(true);
-                  }}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-sm transition-colors flex items-center gap-2"
-                >
-                  <span>👤+</span> Crear Usuario
-                </button>
-              )}
-
               <div className="flex items-center gap-3 border-l border-slate-100 pl-4">
                 <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
                 <span className="text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-full uppercase tracking-wider">
@@ -220,83 +142,6 @@ export default function Dashboard() {
           </section>
         </div>
       </main>
-
-      {/* MODAL OVERLAY: Creación de Usuarios por SuperAdmin */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl border border-slate-100 space-y-5 relative">
-            
-            <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-              <h3 className="text-lg font-bold text-slate-950">Registrar Nuevo Operador</h3>
-              <button 
-                onClick={() => setIsModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 text-xl font-medium"
-              >
-                ✕
-              </button>
-            </div>
-
-            {formError && <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm font-medium">{formError}</div>}
-            {formSuccess && <div className="p-3 bg-green-50 border border-green-200 text-green-600 rounded-lg text-sm font-medium">{formSuccess}</div>}
-
-            <form onSubmit={handleCreateUser} className="space-y-4">
-              <Input
-                label="Nombre Completo"
-                type="text"
-                required
-                placeholder="Ej. Nombre del Staff"
-                value={newUserName}
-                onChange={(e) => setNewUserName(e.target.value)}
-              />
-
-              <Input
-                label="Correo Electrónico"
-                type="email"
-                required
-                placeholder="staff@smartbox.com"
-                value={newUserEmail}
-                onChange={(e) => setNewUserEmail(e.target.value)}
-              />
-
-              <Input
-                label="Contraseña Temporal"
-                type="password"
-                required
-                minLength={6}
-                placeholder="••••••••"
-                value={newUserPassword}
-                onChange={(e) => setNewUserPassword(e.target.value)}
-              />
-
-              <div className="flex flex-col gap-1.5">
-                <label className="block text-sm font-medium text-slate-700">
-                  Asignación de Rol
-                </label>
-                <select 
-                  value={newUserRole} 
-                  onChange={(e) => setNewUserRole(e.target.value)}
-                  className="w-full pl-4 pr-10 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition-all text-sm appearance-none"
-                >
-                  <option value="" className="text-slate-500 bg-white" disabled>
-                    Selecciona un rol...
-                  </option>
-                  {roles.map((role) => (
-                    <option key={role.id} value={role.name}>
-                      {role.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="pt-2">
-                <Button type="submit" isLoading={isCreating}>
-                  {isCreating ? 'Guardando...' : 'Confirmar Registro'}
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
