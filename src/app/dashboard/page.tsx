@@ -6,29 +6,11 @@ import { Sidebar } from '../../components/ui/sidebar';
 import { Input } from '../../components/ui/input';   
 import { Button } from '../../components/ui/button'; 
 import { apiFetch } from '../../lib/api';
-
-interface UserProfile {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-}
-
-interface Role {
-  id: string;
-  name: string;
-}
-
-interface UserItem {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-}
+import { User, Role } from '@/types';
 
 export default function Dashboard() {
   const router = useRouter();
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [roles, setRoles] = useState<Role[]>([]);
 
@@ -51,10 +33,10 @@ export default function Dashboard() {
 
     const loadData = async () => {
       try {
-        // Simulamos usuario (debes cambiar esto por una llamada a tu API /auth/me)
+        // Simulamos usuario
         setUser({ id: '6f6cc1e6...', email: 'example@smartbox.com', name: 'Admin', role: 'SUPER_ADMIN' });
         
-        const rolesRes = await apiFetch('/roles'); // Endpoint que debe retornar [{id, name}, ...]
+        const rolesRes = await apiFetch('/roles'); 
         if (rolesRes.ok) {
           const rolesData = await rolesRes.json();
           setRoles(rolesData);
@@ -80,7 +62,6 @@ export default function Dashboard() {
     setFormSuccess('');
 
    try {
-      // 4. Enviamos directamente el nombre del rol al backend
       const res = await apiFetch('/auth/register-internal', { 
         method: 'POST',
         body: JSON.stringify({
