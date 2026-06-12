@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Sidebar } from '../../components/ui/sidebar';
-import { apiFetch } from '../../lib/api';
 import { User } from '@/types';
 
 export default function Dashboard() {

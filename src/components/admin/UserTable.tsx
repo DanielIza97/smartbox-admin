@@ -28,7 +28,13 @@ function ConfirmationModal({ isOpen, title, message, onConfirm, onCancel }: Conf
   );
 }
 
-export function UserTable({ users, onDelete }: { users: User[], onDelete: () => void }) {
+interface UserTableProps {
+  users: User[];
+  onDelete: () => void;
+  onEdit: (user: User) => void;
+}
+
+export function UserTable({ users, onDelete, onEdit }: UserTableProps) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
 
@@ -40,6 +46,7 @@ export function UserTable({ users, onDelete }: { users: User[], onDelete: () => 
       await apiFetch(`/users/${userToDelete.id}`, { method: 'DELETE' });
       onDelete(); 
     } catch (error) {
+      console.error('Error al eliminar:', error);
       alert('Error al eliminar usuario');
     } finally {
       setLoadingId(null);
@@ -50,8 +57,9 @@ export function UserTable({ users, onDelete }: { users: User[], onDelete: () => 
   return (
     <>
       <div className="w-full overflow-hidden rounded-xl border border-slate-200 shadow-sm bg-white">
-        <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+        <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
           <h2 className="text-base font-bold text-slate-900">Listado de Usuarios</h2>
+          <span className="text-xs font-semibold text-slate-500 uppercase">{users.length} Registros</span>
         </div>
 
         <div className="overflow-x-auto">
@@ -67,26 +75,34 @@ export function UserTable({ users, onDelete }: { users: User[], onDelete: () => 
             <tbody className="divide-y divide-slate-100">
               {users.length > 0 ? (
                 users.map((user: User) => (
-                  <tr key={user.id} className="hover:bg-slate-50 transition-colors">
+                  <tr key={user.id} className="hover:bg-slate-50 transition-colors group">
                     <td className="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">{user.name}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
                     <td className="px-6 py-4 capitalize">
                       {typeof user.role === 'object' && user.role !== null ? user.role.name : user.role}
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-6 py-4 text-right space-x-4">
+                      <button 
+                        onClick={() => onEdit(user)}
+                        className="text-indigo-600 hover:text-indigo-800 font-semibold transition-colors"
+                      >
+                        Editar
+                      </button>
                       <button 
                         onClick={() => setUserToDelete(user)}
                         disabled={loadingId === user.id}
-                        className="text-red-600 hover:text-red-800 font-semibold disabled:opacity-50"
+                        className="text-red-600 hover:text-red-800 font-semibold transition-colors disabled:opacity-50"
                       >
-                        {loadingId === user.id ? 'Eliminando...' : 'Eliminar'}
+                        {loadingId === user.id ? '...' : 'Eliminar'}
                       </button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="px-6 py-8 text-center text-slate-400">No hay usuarios registrados.</td>
+                  <td colSpan={4} className="px-6 py-12 text-center text-slate-400">
+                    No hay usuarios registrados en el sistema.
+                  </td>
                 </tr>
               )}
             </tbody>

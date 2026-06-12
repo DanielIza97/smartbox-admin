@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
-  variant?: 'primary' | 'ghost'; 
+  variant?: 'primary' | 'ghost' | 'secondary'; 
 }
 
 export function Button({ 
@@ -13,14 +13,17 @@ export function Button({
 }: ButtonProps) {
   
   const baseStyles = "w-full mt-2 py-3 px-4 font-medium rounded-xl transition-all text-sm shadow-sm flex items-center justify-center disabled:opacity-70";
+  
   const variantStyles = {
     primary: "bg-indigo-600 hover:bg-indigo-700 text-white disabled:bg-indigo-400",
-    ghost: "bg-transparent text-slate-600 hover:bg-slate-100 border border-slate-200"
+    ghost: "bg-transparent text-slate-600 hover:bg-slate-100 border border-slate-200",
+    secondary: "bg-slate-200 text-slate-800 hover:bg-slate-300 disabled:bg-slate-100"
   };
 
   return (
     <button
       {...props}
+      disabled={isLoading || props.disabled}
       className={`${baseStyles} ${variantStyles[variant]}`}
     >
       {isLoading ? (
