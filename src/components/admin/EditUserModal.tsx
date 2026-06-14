@@ -18,7 +18,7 @@ export function EditUserModal({ isOpen, onClose, user, roles, onSuccess }: EditU
   const [formData, setFormData] = useState({ 
     name: user?.name || '', 
     email: user?.email || '', 
-    role: typeof user?.role === 'object' ? user.role.name : (user?.role || '') 
+    roleId: typeof user?.role === 'object' ? user.role.id : '' 
   });
   
   const [isSaving, setIsSaving] = useState(false);
@@ -31,6 +31,7 @@ export function EditUserModal({ isOpen, onClose, user, roles, onSuccess }: EditU
     try {
       await apiFetch(`/users/${user.id}`, {
         method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
       onSuccess();
@@ -47,7 +48,6 @@ export function EditUserModal({ isOpen, onClose, user, roles, onSuccess }: EditU
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl border border-slate-100 space-y-5">
-        {/* Cambiado a text-slate-950 para asegurar visibilidad en negro */}
         <h3 className="text-lg font-bold text-slate-950">Editar Usuario: {user?.name}</h3>
         
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -55,14 +55,14 @@ export function EditUserModal({ isOpen, onClose, user, roles, onSuccess }: EditU
           <Input label="Email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
           
           <div className="flex flex-col gap-1.5">
-            {/* Cambiado a text-slate-950 */}
             <label className="text-sm font-medium text-slate-950">Rol</label>
             <select 
               className="w-full pl-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-white text-slate-900" 
-              value={formData.role} 
-              onChange={(e) => setFormData({...formData, role: e.target.value})}
+              value={formData.roleId} 
+              onChange={(e) => setFormData({...formData, roleId: e.target.value})}
             >
-              {roles.map(r => <option key={r.id} value={r.name}>{r.name}</option>)}
+              <option value="">Seleccione un rol</option>
+              {roles.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
             </select>
           </div>
 

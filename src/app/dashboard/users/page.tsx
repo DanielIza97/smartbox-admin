@@ -11,7 +11,6 @@ import { User, Role } from '@/types';
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
-  // Iniciamos en false para evitar el primer cambio de estado al montar
   const [loading, setLoading] = useState(false); 
   
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -20,7 +19,6 @@ export default function UsersPage() {
 
   const loadData = useCallback(async () => {
     try {
-      // Solo activamos el loading si ya tenemos datos, si no, es carga inicial silenciosa
       setLoading(true);
       const [usersRes, rolesRes] = await Promise.all([
         apiFetch('/users'),
@@ -40,7 +38,6 @@ export default function UsersPage() {
   }, []);
 
   useEffect(() => {
-    // Patrón recomendado: ejecutar la función directamente
     loadData();
   }, [loadData]);
 
@@ -64,7 +61,6 @@ export default function UsersPage() {
             </button>
           </div>
 
-          {/* Si loading es true, mostramos carga. Si es la primera carga, se ve el spinner */}
           {loading && users.length === 0 ? (
             <div className="flex items-center justify-center py-20 text-slate-500">
               Cargando datos...
@@ -92,17 +88,24 @@ export default function UsersPage() {
         }}
       />
 
-      <EditUserModal
-        key={userToEdit?.id || 'new'}
-        isOpen={isEditModalOpen}
-        user={userToEdit}
-        onClose={() => setIsEditModalOpen(false)}
-        roles={roles}
-        onSuccess={() => {
-          loadData();
-          setIsEditModalOpen(false);
-        }}
-      />
+      {/* Renderizado condicional: Solo existe el modal si hay un usuario seleccionado */}
+      {userToEdit && (
+        <EditUserModal
+          key={userToEdit.id}
+          isOpen={isEditModalOpen}
+          user={userToEdit}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setUserToEdit(null); 
+          }}
+          roles={roles}
+          onSuccess={() => {
+            loadData();
+            setIsEditModalOpen(false);
+            setUserToEdit(null);
+          }}
+        />
+      )}
     </div>
   );
 }
