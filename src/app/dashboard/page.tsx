@@ -3,31 +3,21 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Sidebar } from '../../components/ui/sidebar';
-import { User } from '@/types';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Dashboard() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // 3. Verificación de seguridad
     const token = localStorage.getItem('token');
     if (!token) {
       router.push('/login');
       return;
     }
-
-    const loadData = async () => {
-      try {
-        // Simulamos usuario
-        setUser({ id: '6f6cc1e6...', email: 'example@smartbox.com', name: 'Admin', role: 'SUPER_ADMIN' });
-      } catch (err) {
-        console.error('Error al cargar datos', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    loadData();
+    setIsLoading(false);
   }, [router]);
 
   if (isLoading) {
@@ -59,14 +49,13 @@ export default function Dashboard() {
       <Sidebar />
 
       <main className="flex-1 ml-64 bg-slate-50 min-h-screen">
-        <div className="p-8 px-10 max-w-[1500px] mx-auto space-y-8">
-          
+        <div className="p-8 px-10 max-w-screen-2xl mx-auto space-y-8">          
           {/* Encabezado */}
           <header className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <div>
               <h1 className="text-2xl font-bold text-slate-950 tracking-tight">Panel de Control General</h1>
               <p className="text-sm text-slate-500 mt-1">
-                Bienvenido de vuelta, <span className="font-semibold text-slate-700">{user?.name}</span>
+                Bienvenido de vuelta, <span className="font-semibold text-slate-700">{user?.name || 'Usuario'}</span>
               </p>
             </div>
             
@@ -74,7 +63,7 @@ export default function Dashboard() {
               <div className="flex items-center gap-3 border-l border-slate-100 pl-4">
                 <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
                 <span className="text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-full uppercase tracking-wider">
-                  {user?.role}
+                  {user?.role || 'SIN ROL'}
                 </span>
               </div>
             </div>
