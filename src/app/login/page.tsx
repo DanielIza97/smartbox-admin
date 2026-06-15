@@ -6,45 +6,40 @@ import Link from 'next/link';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { apiFetch } from '../../lib/api';
+import { useAuth } from '@/context/AuthContext';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const login = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     setIsLoading(true);
     setError('');
 
     try {
       const res = await apiFetch('/auth/login', {
         method: 'POST',
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
-      if (res.ok && data.access_token) {
-        localStorage.setItem('token', data.access_token);
-        document.cookie = `token=${data.access_token}; path=/; max-age=86400; SameSite=Strict`;
-        
-        router.refresh(); 
+      
+      if (res.ok && data.access_token && data.user) {
+        document.cookie = `userRole=${data.user.role}; path=/; max-age=86400; SameSite=Strict`;
+        login(data.user, data.access_token);
         router.push('/dashboard');
       } else {
-        setError(data.message || 'Credenciales inválidas. Inténtalo de nuevo.');
+        setError(data.message || 'Credenciales inválidas.');
       }
-    } catch (error) {
-      console.error(error);
-      setError(
-        'No se pudo conectar con el servidor. Verifica que tu backend esté encendido.'
-      );
+    } catch (err) {
+      console.error(err);
+      setError('No se pudo conectar con el servidor.');
     } finally {
       setIsLoading(false);
     }
@@ -54,25 +49,18 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
       <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
         
-        {/* Encabezado / Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-950 tracking-tight">
-            SmartBox
-          </h1>
-          <p className="text-sm text-slate-500 mt-2">
-            Ingresa tus credenciales para acceder a tu cuenta
-          </p>
+          <h1 className="text-3xl font-bold text-slate-950 tracking-tight">SmartBox</h1>
+          <p className="text-sm text-slate-500 mt-2">Ingresa tus credenciales</p>
         </div>
 
-        {/* Mensaje de Error Visual */}
         {error && (
           <div className="mb-6 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm font-medium">
             {error}
           </div>
         )}
 
-        {/* Formulario */}
-        <form onSubmit={login} className="space-y-5">
+        <form onSubmit={handleLogin} className="space-y-5">
           <Input
             label="Correo Electrónico"
             type="email"
@@ -92,12 +80,8 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
             
-            {/* ENLACE DE RECUPERACIÓN */}
             <div className="text-right">
-              <Link 
-                href="/forgot-password" 
-                className="text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline transition-colors"
-              >
+              <Link href="/forgot-password" className="text-xs font-medium text-blue-600 hover:underline">
                 ¿Olvidaste tu contraseña?
               </Link>
             </div>
@@ -107,7 +91,6 @@ export default function LoginPage() {
             Entrar
           </Button>
         </form>
-
       </div>
     </div>
   );

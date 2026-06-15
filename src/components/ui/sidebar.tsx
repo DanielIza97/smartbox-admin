@@ -2,40 +2,47 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext'; // <--- Importamos el contexto
 
 export function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
+  const { user, logout } = useAuth(); // <--- Usamos el contexto aquí
+
+  // Extraemos el rol. Si user es null, el rol será una cadena vacía
+  const userRole = user?.role || '';
+
+  console.log("Rol obtenido desde AuthContext:", userRole);
 
   const menuItems = [
-    { name: 'Inicio / Métricas', path: '/dashboard', icon: '📊' },
-    { name: 'Pods SmartBox (IoT)', path: '/dashboard/pods', icon: '📦' },
-    { name: 'Reservas', path: '/dashboard/reservations', icon: '📅' },
-    { name: 'Usuarios y Roles', path: '/dashboard/users', icon: '👥' },
-    { name: 'Historial de Pagos', path: '/dashboard/payments', icon: '💳' },
-    { name: 'Auditoría y Logs', path: '/dashboard/logs', icon: '📜' },
+    { name: 'Inicio / Métricas', path: '/dashboard', icon: '📊', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF'] },
+    { name: 'Pods SmartBox (IoT)', path: '/dashboard/pods', icon: '📦', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF', 'DEVICE'] },
+    { name: 'Reservas', path: '/dashboard/reservations', icon: '📅', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF', 'CLIENT'] },
+    { name: 'Usuarios y Roles', path: '/dashboard/users', icon: '👥', roles: ['SUPER_ADMIN', 'ADMIN'] },
+    { name: 'Historial de Pagos', path: '/dashboard/payments', icon: '💳', roles: ['SUPER_ADMIN', 'ADMIN'] },
+    { name: 'Auditoría y Logs', path: '/dashboard/logs', icon: '📜', roles: ['SUPER_ADMIN'] },
   ];
 
+  // Filtramos los items basándonos en el rol que viene del contexto
+  const filteredItems = user ? menuItems.filter(item => item.roles.includes(userRole)) : [];
+
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    logout(); // Limpia localStorage y el estado del AuthContext
     router.push('/login');
   };
 
   return (
     <aside className="w-64 bg-slate-900 text-slate-200 flex flex-col justify-between p-4 min-h-screen fixed left-0 top-0 z-40">
       <div>
-        {/* Logo / Marca */}
         <div className="mb-8 px-2 py-4 border-b border-slate-800 text-center">
           <h2 className="text-2xl font-bold text-white tracking-wider">SmartBox</h2>
           <span className="text-xs text-indigo-400 font-medium tracking-widest uppercase">
-            Admin Panel
+            {userRole || 'Invitado'} Panel
           </span>
         </div>
 
-        {/* Menú Dinámico */}
         <nav className="space-y-1">
-          {menuItems.map((item) => {
-            // isActive es verdadero si estamos exactamente en la ruta o en una sub-ruta
+          {filteredItems.map((item) => {
             const isActive = pathname === item.path || (item.path !== '/dashboard' && pathname.startsWith(item.path));
             
             return (
@@ -56,14 +63,12 @@ export function Sidebar() {
         </nav>
       </div>
 
-      {/* Botón Cerrar Sesión */}
       <div className="border-t border-slate-800 pt-4">
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-400 hover:bg-red-500/10 rounded-xl transition-colors"
         >
-          <span>🚪</span>
-          Cerrar Sesión
+          <span>🚪</span> Cerrar Sesión
         </button>
       </div>
     </aside>
