@@ -13,8 +13,10 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
   });
 
   // Si el token expiró o es inválido, cerramos sesión
-  if (response.status === 401) {
+  if (response.status === 401 && !path.includes('/auth/login')) {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
     window.location.href = '/login';
   }
 

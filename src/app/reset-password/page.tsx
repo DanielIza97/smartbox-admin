@@ -1,17 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { apiFetch } from '../../lib/api';
-import { Input } from '../../components/ui/input';  
-import { Button } from '../../components/ui/button'; 
+import { apiFetch } from '@/lib/api';
+import { Input } from '../../components/ui/input';
+import { Button } from '../../components/ui/button';
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const token = searchParams.get('token'); 
+  const token = searchParams.get('token');
 
-  const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -19,8 +20,10 @@ export default function ResetPasswordPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (password !== confirmPassword) {
+    setMessage('');
+    setError('');
+
+    if (newPassword !== confirmPassword) {
       setError('Las contraseñas no coinciden.');
       return;
     }
@@ -31,13 +34,11 @@ export default function ResetPasswordPage() {
     }
 
     setLoading(true);
-    setMessage('');
-    setError('');
 
     try {
-      const res = await apiFetch(`/auth/reset-password?token=${token}`, {
+      const res = await apiFetch('/auth/reset-password', {
         method: 'POST',
-        body: JSON.stringify({ password }), 
+        body: JSON.stringify({ token, newPassword }),
       });
 
       const data = await res.json();
@@ -47,13 +48,14 @@ export default function ResetPasswordPage() {
       }
 
       setMessage('Contraseña actualizada con éxito. Redirigiendo al login...');
-      
-      setTimeout(() => {
-        router.push('/login'); 
-      }, 3000);
 
-    } catch (err: any) {
-      setError(err.message || 'No se pudo conectar con el servidor.');
+      setTimeout(() => {
+        router.push('/login');
+      }, 3000);
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'No se pudo conectar con el servidor.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -62,8 +64,6 @@ export default function ResetPasswordPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
-        
-        {/* Encabezado / Logo */}
         <div className="text-center mb-6">
           <h2 className="text-3xl font-bold text-slate-950 tracking-tight mb-2">
             Nueva Contraseña
@@ -72,22 +72,31 @@ export default function ResetPasswordPage() {
             Establece tu nueva contraseña de acceso para SmartBox.
           </p>
         </div>
-        
+
         {!token ? (
-          <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm font-medium text-center">
-            Enlace inválido o sin token de acceso. Por favor solicita uno nuevo.
+          <div className="space-y-4">
+            <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm font-medium text-center">
+              Enlace inválido o sin token de acceso. Por favor solicita uno nuevo.
+            </div>
+            <div className="text-center">
+              <Link
+                href="/forgot-password"
+                className="text-xs font-medium text-blue-600 hover:underline"
+              >
+                Solicitar nuevo enlace
+              </Link>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
-            
             <Input
               label="Nueva Contraseña"
               type="password"
               required
               minLength={6}
               placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
             />
 
             <Input
@@ -104,7 +113,7 @@ export default function ResetPasswordPage() {
                 {message}
               </div>
             )}
-            
+
             {error && (
               <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm font-medium">
                 {error}
@@ -114,6 +123,29 @@ export default function ResetPasswordPage() {
             <Button type="submit" isLoading={loading}>
               {loading ? 'Actualizando...' : 'Restablecer contraseña'}
             </Button>
+
+            <div className="text-center pt-2">
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-indigo-600 transition-colors group"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition-colors"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+                  />
+                </svg>
+                Volver al inicio de sesión
+              </Link>
+            </div>
           </form>
         )}
       </div>

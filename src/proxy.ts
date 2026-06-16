@@ -21,14 +21,13 @@ export function proxy(req: NextRequest) {
 
   const isProtected = pathname.startsWith('/dashboard');
 
-  // 2. Si es una ruta protegida y no hay token
+  // 3. Si es una ruta protegida y no hay token, redirigir a login
   if (isProtected && !token) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
-  // 3. Validación de permisos
+  // 4. Validación de permisos
   if (isProtected) {
-    // Buscamos si la ruta actual requiere permisos específicos
     for (const [route, allowedRoles] of Object.entries(rolePermissions)) {
       if (pathname.startsWith(route)) {
         if (!allowedRoles.includes(userRole)) {
@@ -44,6 +43,11 @@ export function proxy(req: NextRequest) {
   return NextResponse.next();
 }
 
+// Mantenemos el matcher configurado
 export const config = {
-  matcher: ['/dashboard/:path*'],
+  matcher: [
+    '/dashboard/:path*',
+    '/login',
+    '/unauthorized'
+  ],
 };

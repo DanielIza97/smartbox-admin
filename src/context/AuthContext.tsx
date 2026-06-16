@@ -23,8 +23,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Cargamos el usuario desde localStorage al iniciar la app
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
+    try {
       setUser(JSON.parse(storedUser));
+    } catch {
+      localStorage.removeItem('user');
     }
+  }
   }, []);
 
   // Función para guardar datos al iniciar sesión

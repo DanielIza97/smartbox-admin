@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { apiFetch } from '@/src/lib/api';
+import { apiFetch } from '../../lib/api';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button'; 
 
