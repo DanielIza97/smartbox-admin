@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Sidebar } from '../../components/ui/sidebar';
 import { useAuth } from '@/context/AuthContext';
 
@@ -31,17 +32,11 @@ export default function Dashboard() {
     );
   }
 
-  const systemStats = [
-    { title: 'Pods SmartBox (IoT)', value: '12 / 15', sub: '3 en mantenimiento (active/offline)', color: 'border-l-teal-500', icon: '📦' },
-    { title: 'Reservas Activas (Hoy)', value: '42', sub: 'Estatus: pending / active', color: 'border-l-indigo-500', icon: '📅' },
-    { title: 'Ingresos de Caja (Stripe)', value: '$1,240.50', sub: 'Validados vía Webhooks', color: 'border-l-emerald-500', icon: '💳' },
-    { title: 'Estado Broker EMQX', value: 'Estable', sub: 'Heartbeats ESP32 estables', color: 'border-l-amber-500', icon: '⚡' },
-  ];
-
-  const recentReservations = [
-    { id: 'RES-2026-001', user: 'Carlos Mendoza', pod: 'Pod-003', status: 'active', time: '10:00 - 12:00' },
-    { id: 'RES-2026-002', user: 'Ana María Silva', pod: 'Pod-001', status: 'paid', time: '13:00 - 14:30' },
-    { id: 'RES-2026-003', user: 'Kevin Ortega', pod: 'Pod-012', status: 'pending', time: '15:00 - 16:00' },
+  const upcomingModules = [
+    { title: 'Pods SmartBox (IoT)', sub: 'Control de cápsulas vía MQTT / ESP32', color: 'border-l-teal-500', icon: '📦' },
+    { title: 'Reservas', sub: 'Disponibilidad y estados de reserva', color: 'border-l-indigo-500', icon: '📅' },
+    { title: 'Pagos', sub: 'Cobros y conciliación de webhooks', color: 'border-l-emerald-500', icon: '💳' },
+    { title: 'Monitoreo IoT', sub: 'Estado del broker y heartbeats', color: 'border-l-amber-500', icon: '⚡' },
   ];
 
   return (
@@ -69,64 +64,41 @@ export default function Dashboard() {
             </div>
           </header>
 
-          {/* Grid de Tarjetas */}
-          <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-            {systemStats.map((stat, idx) => (
-              <div key={idx} className={`bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-l-4 ${stat.color} flex justify-between items-center transition-transform hover:-translate-y-1 duration-200`}>
-                <div>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{stat.title}</p>
-                  <h3 className="text-2xl font-bold text-slate-900 mt-2">{stat.value}</h3>
-                  <span className="text-xs text-slate-500 mt-1 block">{stat.sub}</span>
+          {/* Módulos en construcción */}
+          <section>
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-6">
+              <p className="text-sm text-slate-500">
+                Reservas, pagos y monitoreo IoT todavía no están implementados en el backend —
+                estas tarjetas muestran lo que vendrá, no datos en vivo.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+              {upcomingModules.map((mod, idx) => (
+                <div key={idx} className={`bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-l-4 ${mod.color} border-dashed flex justify-between items-center opacity-75`}>
+                  <div>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{mod.title}</p>
+                    <span className="text-xs text-slate-500 mt-1 block">{mod.sub}</span>
+                    <span className="inline-block mt-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-50 px-2 py-1 rounded-full">
+                      Próximamente
+                    </span>
+                  </div>
+                  <span className="text-2xl p-3 bg-slate-50 rounded-xl">{mod.icon}</span>
                 </div>
-                <span className="text-2xl p-3 bg-slate-50 rounded-xl">{stat.icon}</span>
-              </div>
-            ))}
+              ))}
+            </div>
           </section>
 
-          {/* Módulo de Reservas */}
+          {/* Accesos reales de hoy */}
           <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h2 className="text-lg font-bold text-slate-900">Monitoreo de Reservas (Módulo Base)</h2>
-                <p className="text-xs text-slate-400 mt-0.5">Sincronizado con Base de Datos PostgreSQL</p>
-              </div>
-              <button className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors">
-                Ver Gestión de Reservas →
-              </button>
-            </div>
-
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
-                <thead>
-                  <tr className="border-b border-slate-100 text-slate-400 uppercase text-xs tracking-wider">
-                    <th className="py-3 font-semibold">ID Reserva</th>
-                    <th className="py-3 font-semibold">Usuario</th>
-                    <th className="py-3 font-semibold">Cápsula Asignada</th>
-                    <th className="py-3 font-semibold">Bloque Horario</th>
-                    <th className="py-3 font-semibold text-right">Estado de Flujo</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-50 text-slate-700">
-                  {recentReservations.map((res) => (
-                    <tr key={res.id} className="hover:bg-slate-50/50 transition-colors group">
-                      <td className="py-4 font-mono font-medium text-slate-900 text-xs">{res.id}</td>
-                      <td className="py-4 font-medium">{res.user}</td>
-                      <td className="py-4 text-slate-600 font-medium">{res.pod}</td>
-                      <td className="py-4 text-slate-500">{res.time}</td>
-                      <td className="py-4 text-right">
-                        <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wide border ${
-                          res.status === 'active' ? 'bg-teal-50 text-teal-700 border-teal-200' :
-                          res.status === 'paid' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-                          'bg-amber-50 text-amber-700 border-amber-200'
-                        }`}>
-                          {res.status === 'active' ? 'En Uso' : res.status === 'paid' ? 'Pagado' : 'Pendiente'}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <h2 className="text-lg font-bold text-slate-900 mb-1">Disponible hoy</h2>
+            <p className="text-xs text-slate-400 mb-6">Lo único conectado al backend real por ahora.</p>
+            <Link
+              href="/dashboard/users"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+            >
+              👥 Ir a Gestión de Usuarios →
+            </Link>
           </section>
         </div>
       </main>
