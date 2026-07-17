@@ -5,12 +5,14 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Sidebar } from '@/components/ui/sidebar';
 import { MercadoPagoConnectionCard } from '@/components/gyms/MercadoPagoConnectionCard';
+import { PlanCard } from '@/components/plans/PlanCard';
 import { apiFetch } from '@/lib/api';
-import { Gym } from '@/types';
+import { Gym, Plan } from '@/types';
 
 export default function GymDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [gym, setGym] = useState<Gym | null>(null);
+  const [plan, setPlan] = useState<Plan | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
@@ -24,6 +26,12 @@ export default function GymDetailPage() {
       }
       const data = await res.json();
       setGym(data);
+
+      // GET /plans le devuelve TODOS los planes a un SUPER_ADMIN (sin scope
+      // de gym) — no hay un GET /plans?gymId todavía, así que filtramos acá.
+      const plansRes = await apiFetch('/plans');
+      const plans: Plan[] = plansRes.ok ? await plansRes.json() : [];
+      setPlan(plans.find((p) => p.gymId === id) ?? null);
     } catch (error) {
       console.error('Error al cargar el gimnasio:', error);
     } finally {
@@ -76,6 +84,14 @@ export default function GymDetailPage() {
                 gymId={gym.id}
                 connected={!!gym.mercadoPagoUserId}
                 canConnect
+              />
+
+              <PlanCard
+                gymId={gym.id}
+                plan={plan}
+                canManage
+                mercadoPagoConnected={!!gym.mercadoPagoUserId}
+                onCreated={setPlan}
               />
             </div>
           )}

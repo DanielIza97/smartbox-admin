@@ -25,3 +25,45 @@ export interface Gym {
   createdAt?: string;
   updatedAt?: string;
 }
+
+// Un solo plan por gimnasio en v1.0 (unique en gym_id del lado del
+// backend) — sin niveles ni descuentos, eso es E6-04 (v1.5).
+export interface Plan {
+  id: string;
+  name: string;
+  priceCents: number;
+  gymId: string;
+  mercadoPagoPlanId?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// Sin 'pending' — el trial de 14 días da acceso inmediato, así que nace
+// 'active'. Ver la sesión de scoping de billing en el CLAUDE.md del backend.
+export type MembershipStatus = 'active' | 'past_due' | 'cancelled';
+
+export interface Membership {
+  id: string;
+  userId: string;
+  planId: string;
+  plan?: Plan;
+  status: MembershipStatus;
+  mercadoPagoPreapprovalId?: string | null;
+  trialEndsAt?: string | null;
+  currentPeriodEnd?: string | null;
+  cancelAtPeriodEnd: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// Registro interno de facturación (E2-06), solo lectura — status es el
+// string crudo del Payment de Mercado Pago, no un union acotado.
+export interface Invoice {
+  id: string;
+  membershipId: string;
+  amountCents: number;
+  status: string;
+  mercadoPagoPaymentId: string;
+  paidAt?: string | null;
+  createdAt?: string;
+}

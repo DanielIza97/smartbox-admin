@@ -19,6 +19,9 @@ export function proxy(req: NextRequest) {
     // El propio gimnasio del solicitante (conexión Mercado Pago) — mismos
     // roles que GET /gyms/:id en el backend.
     '/dashboard/settings': ['SUPER_ADMIN', 'ADMIN', 'STAFF'],
+    // Autogestión de la propia membresía (E2-07) — solo CLIENT, mismos
+    // roles que POST /memberships/subscribe y GET /memberships/me.
+    '/dashboard/membership': ['CLIENT'],
   };
 
   const isProtected = pathname.startsWith('/dashboard');
