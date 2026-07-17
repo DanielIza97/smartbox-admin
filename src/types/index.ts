@@ -67,3 +67,43 @@ export interface Invoice {
   paidAt?: string | null;
   createdAt?: string;
 }
+
+// Plantilla recurrente semanal (Epic 3 · E3-01) — una fila = un turno que se
+// repite todas las semanas (p. ej. "Yoga" lunes 09:00). Las ocurrencias
+// reservables se derivan de este patrón en el momento, no viven en una
+// tabla aparte — ver GET /classes/:id/availability.
+export interface ClassOrResource {
+  id: string;
+  gymId: string;
+  name: string;
+  capacity: number;
+  // 0 = domingo ... 6 = sábado.
+  dayOfWeek: number;
+  startTime: string;
+  durationMinutes: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface AvailabilitySlot {
+  startAt: string;
+  endAt: string;
+  capacity: number;
+  available: number;
+}
+
+// Sin 'pending'/'active'/'finished' — esos estaban pensados para el
+// check-in físico de Epic 8 (IoT), todavía sin diseñar.
+export type ReservationStatus = 'confirmed' | 'cancelled' | 'expired';
+
+export interface Reservation {
+  id: string;
+  userId: string;
+  classId: string;
+  classOrResource?: ClassOrResource;
+  startAt: string;
+  endAt: string;
+  status: ReservationStatus;
+  createdAt?: string;
+  updatedAt?: string;
+}

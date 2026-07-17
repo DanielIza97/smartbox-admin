@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Sidebar } from '@/components/ui/sidebar';
 import { MercadoPagoConnectionCard } from '@/components/gyms/MercadoPagoConnectionCard';
 import { PlanCard } from '@/components/plans/PlanCard';
+import { ClassesSection } from '@/components/classes/ClassesSection';
 import { apiFetch } from '@/lib/api';
 import { Gym, Plan } from '@/types';
 
@@ -93,6 +94,8 @@ export default function GymDetailPage() {
                 mercadoPagoConnected={!!gym.mercadoPagoUserId}
                 onCreated={setPlan}
               />
+
+              <ClassesSection gymId={gym.id} canManage />
             </div>
           )}
         </div>

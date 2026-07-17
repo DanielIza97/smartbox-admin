@@ -34,7 +34,6 @@ export default function Dashboard() {
 
   const upcomingModules = [
     { title: 'Pods SmartBox (IoT)', sub: 'Control de cápsulas vía MQTT / ESP32', color: 'border-l-teal-500', icon: '📦' },
-    { title: 'Reservas', sub: 'Disponibilidad y estados de reserva', color: 'border-l-indigo-500', icon: '📅' },
     { title: 'Pagos', sub: 'Cobros y conciliación de webhooks', color: 'border-l-emerald-500', icon: '💳' },
     { title: 'Monitoreo IoT', sub: 'Estado del broker y heartbeats', color: 'border-l-amber-500', icon: '⚡' },
   ];
@@ -68,13 +67,13 @@ export default function Dashboard() {
           <section>
             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-6">
               <p className="text-sm text-slate-500">
-                Reservas, pagos y monitoreo IoT ya existen en el backend, pero este panel
-                todavía no tiene la pantalla para consumirlos — estas tarjetas muestran lo
-                que vendrá acá, no datos en vivo.
+                Pagos y monitoreo IoT ya existen en el backend, pero este panel todavía no
+                tiene la pantalla para consumirlos — estas tarjetas muestran lo que vendrá
+                acá, no datos en vivo.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {upcomingModules.map((mod, idx) => (
                 <div key={idx} className={`bg-white p-6 rounded-2xl shadow-sm border border-slate-100 border-l-4 ${mod.color} border-dashed flex justify-between items-center opacity-75`}>
                   <div>
@@ -127,6 +126,20 @@ export default function Dashboard() {
                   🎫 Ir a Mi Membresía →
                 </Link>
               )}
+              {user?.role !== 'SUPER_ADMIN' && (
+                <Link
+                  href="/dashboard/classes"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+                >
+                  🧘 Ir a Clases →
+                </Link>
+              )}
+              <Link
+                href="/dashboard/reservations"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+              >
+                📅 Ir a {user?.role === 'CLIENT' ? 'Mis Reservas' : 'Reservas'} →
+              </Link>
             </div>
           </section>
         </div>

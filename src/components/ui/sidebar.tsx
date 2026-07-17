@@ -16,6 +16,7 @@ export function Sidebar() {
     { name: 'Inicio / Métricas', path: '/dashboard', icon: '📊', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF'] },
     { name: 'Gimnasios', path: '/dashboard/gyms', icon: '🏢', roles: ['SUPER_ADMIN'] },
     { name: 'Pods SmartBox (IoT)', path: '/dashboard/pods', icon: '📦', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF', 'DEVICE'] },
+    { name: 'Clases', path: '/dashboard/classes', icon: '🧘', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF', 'CLIENT'] },
     { name: 'Reservas', path: '/dashboard/reservations', icon: '📅', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF', 'CLIENT'] },
     { name: 'Mi Membresía', path: '/dashboard/membership', icon: '🎫', roles: ['CLIENT'] },
     { name: 'Usuarios y Roles', path: '/dashboard/users', icon: '👥', roles: ['SUPER_ADMIN', 'ADMIN'] },
