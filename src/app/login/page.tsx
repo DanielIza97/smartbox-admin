@@ -29,11 +29,18 @@ export default function LoginPage() {
       });
 
       const data = await res.json();
-      
       if (res.ok && data.access_token && data.user) {
+        // 1. Guardar en cookies (de forma síncrona, si es posible)
         document.cookie = `userRole=${data.user.role}; path=/; max-age=86400; SameSite=Strict`;
+        document.cookie = `token=${data.access_token}; path=/; max-age=86400; SameSite=Strict`;
+
+        // 2. Actualizar el contexto
         login(data.user, data.access_token);
-        router.push('/dashboard');
+        
+        // 3. Pequeña pausa de seguridad antes de navegar
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 100);
       } else {
         setError(data.message || 'Credenciales inválidas.');
       }

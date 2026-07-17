@@ -14,6 +14,11 @@ export function proxy(req: NextRequest) {
     '/dashboard/logs': ['SUPER_ADMIN'],
     '/dashboard/pods': ['SUPER_ADMIN', 'ADMIN', 'STAFF', 'DEVICE'],
     '/dashboard/reservations': ['SUPER_ADMIN', 'ADMIN', 'STAFF', 'CLIENT'],
+    // Alta/listado de gimnasios (tenants) — solo SUPER_ADMIN, igual que el backend.
+    '/dashboard/gyms': ['SUPER_ADMIN'],
+    // El propio gimnasio del solicitante (conexión Mercado Pago) — mismos
+    // roles que GET /gyms/:id en el backend.
+    '/dashboard/settings': ['SUPER_ADMIN', 'ADMIN', 'STAFF'],
   };
 
   const isProtected = pathname.startsWith('/dashboard');

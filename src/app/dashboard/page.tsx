@@ -68,8 +68,9 @@ export default function Dashboard() {
           <section>
             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-6">
               <p className="text-sm text-slate-500">
-                Reservas, pagos y monitoreo IoT todavía no están implementados en el backend —
-                estas tarjetas muestran lo que vendrá, no datos en vivo.
+                Reservas, pagos y monitoreo IoT ya existen en el backend, pero este panel
+                todavía no tiene la pantalla para consumirlos — estas tarjetas muestran lo
+                que vendrá acá, no datos en vivo.
               </p>
             </div>
 
@@ -93,12 +94,30 @@ export default function Dashboard() {
           <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
             <h2 className="text-lg font-bold text-slate-900 mb-1">Disponible hoy</h2>
             <p className="text-xs text-slate-400 mb-6">Lo único conectado al backend real por ahora.</p>
-            <Link
-              href="/dashboard/users"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
-            >
-              👥 Ir a Gestión de Usuarios →
-            </Link>
+            <div className="flex flex-col gap-3">
+              <Link
+                href="/dashboard/users"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+              >
+                👥 Ir a Gestión de Usuarios →
+              </Link>
+              {user?.role === 'SUPER_ADMIN' && (
+                <Link
+                  href="/dashboard/gyms"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+                >
+                  🏢 Ir a Gimnasios →
+                </Link>
+              )}
+              {(user?.role === 'ADMIN' || user?.role === 'STAFF') && (
+                <Link
+                  href="/dashboard/settings"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+                >
+                  ⚙️ Ir a Configuración de mi gimnasio →
+                </Link>
+              )}
+            </div>
           </section>
         </div>
       </main>

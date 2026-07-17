@@ -6,6 +6,9 @@ interface User {
   name: string;
   email: string;
   role: string;
+  // null para SUPER_ADMIN (no pertenece a ningún gimnasio en particular) —
+  // igual que el JWT del backend, ver src/modules/auth/types/auth.types.ts.
+  gymId?: string | null;
 }
 
 interface AuthContextType {

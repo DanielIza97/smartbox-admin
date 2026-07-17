@@ -2,34 +2,29 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useAuth } from '@/context/AuthContext'; // <--- Importamos el contexto
+import { useAuth } from '@/context/AuthContext';
+import { LogoutButton } from './LogoutButton';
 
 export function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
-  const { user, logout } = useAuth(); // <--- Usamos el contexto aquí
+  const { user, logout } = useAuth();
 
-  // Extraemos el rol. Si user es null, el rol será una cadena vacía
   const userRole = user?.role || '';
-
-  console.log("Rol obtenido desde AuthContext:", userRole);
 
   const menuItems = [
     { name: 'Inicio / Métricas', path: '/dashboard', icon: '📊', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF'] },
+    { name: 'Gimnasios', path: '/dashboard/gyms', icon: '🏢', roles: ['SUPER_ADMIN'] },
     { name: 'Pods SmartBox (IoT)', path: '/dashboard/pods', icon: '📦', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF', 'DEVICE'] },
     { name: 'Reservas', path: '/dashboard/reservations', icon: '📅', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF', 'CLIENT'] },
     { name: 'Usuarios y Roles', path: '/dashboard/users', icon: '👥', roles: ['SUPER_ADMIN', 'ADMIN'] },
     { name: 'Historial de Pagos', path: '/dashboard/payments', icon: '💳', roles: ['SUPER_ADMIN', 'ADMIN'] },
+    { name: 'Configuración', path: '/dashboard/settings', icon: '⚙️', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF'] },
     { name: 'Auditoría y Logs', path: '/dashboard/logs', icon: '📜', roles: ['SUPER_ADMIN'] },
   ];
 
   // Filtramos los items basándonos en el rol que viene del contexto
   const filteredItems = user ? menuItems.filter(item => item.roles.includes(userRole)) : [];
-
-  const handleLogout = () => {
-    logout(); // Limpia localStorage y el estado del AuthContext
-    router.push('/login');
-  };
 
   return (
     <aside className="w-64 bg-slate-900 text-slate-200 flex flex-col justify-between p-4 min-h-screen fixed left-0 top-0 z-40">
@@ -44,15 +39,12 @@ export function Sidebar() {
         <nav className="space-y-1">
           {filteredItems.map((item) => {
             const isActive = pathname === item.path || (item.path !== '/dashboard' && pathname.startsWith(item.path));
-            
             return (
               <Link
                 key={item.path}
                 href={item.path}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                  isActive
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/10'
-                    : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+                  isActive ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/10' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
                 }`}
               >
                 <span className="text-lg">{item.icon}</span>
@@ -63,13 +55,20 @@ export function Sidebar() {
         </nav>
       </div>
 
-      <div className="border-t border-slate-800 pt-4">
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-400 hover:bg-red-500/10 rounded-xl transition-colors"
+      {/* SECCIÓN DE USUARIO: Perfil y Logout */}
+      <div className="border-t border-slate-800 pt-4 space-y-2">
+        <Link
+          href="/dashboard/profile"
+          className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all ${
+            pathname === '/dashboard/profile' ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800'
+          }`}
         >
-          <span>🚪</span> Cerrar Sesión
-        </button>
+          <span>👤</span> Mi Perfil
+        </Link>
+        
+        <LogoutButton 
+          className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-400 hover:bg-red-500/10 rounded-xl transition-colors" 
+        />
       </div>
     </aside>
   );
