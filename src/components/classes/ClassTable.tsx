@@ -5,11 +5,14 @@ import { ClassOrResource } from '@/types';
 
 interface ClassTableProps {
   classes: ClassOrResource[];
+  // Portal de socios (E6-02) reusa esta tabla fuera de /dashboard — el
+  // link de detalle necesita apuntar a su propia base de ruta.
+  detailBasePath?: string;
 }
 
 const DAYS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
-export function ClassTable({ classes }: ClassTableProps) {
+export function ClassTable({ classes, detailBasePath = '/dashboard/classes' }: ClassTableProps) {
   return (
     <div className="w-full overflow-hidden rounded-xl border border-slate-200 shadow-sm bg-white">
       <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
@@ -40,7 +43,7 @@ export function ClassTable({ classes }: ClassTableProps) {
                   <td className="px-6 py-4 whitespace-nowrap">{cls.capacity}</td>
                   <td className="px-6 py-4 text-right">
                     <Link
-                      href={`/dashboard/classes/${cls.id}`}
+                      href={`${detailBasePath}/${cls.id}`}
                       className="text-indigo-600 hover:text-indigo-800 font-semibold transition-colors"
                     >
                       Ver disponibilidad

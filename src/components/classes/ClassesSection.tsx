@@ -11,9 +11,11 @@ interface ClassesSectionProps {
   // Solo SUPER_ADMIN/ADMIN pueden crear clases — mismos roles que POST
   // /classes en el backend.
   canManage: boolean;
+  // Portal de socios (E6-02) embebe esta sección fuera de /dashboard.
+  detailBasePath?: string;
 }
 
-export function ClassesSection({ gymId, canManage }: ClassesSectionProps) {
+export function ClassesSection({ gymId, canManage, detailBasePath }: ClassesSectionProps) {
   const [classes, setClasses] = useState<ClassOrResource[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,7 +61,7 @@ export function ClassesSection({ gymId, canManage }: ClassesSectionProps) {
       {loading ? (
         <div className="flex items-center justify-center py-12 text-slate-500">Cargando clases...</div>
       ) : (
-        <ClassTable classes={classes} />
+        <ClassTable classes={classes} detailBasePath={detailBasePath} />
       )}
 
       <CreateClassModal

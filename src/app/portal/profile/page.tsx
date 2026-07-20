@@ -2,6 +2,6 @@
 
 import { ProfileContent } from '@/components/profile/ProfileContent';
 
-export default function ProfilePage() {
+export default function PortalProfilePage() {
   return <ProfileContent />;
 }

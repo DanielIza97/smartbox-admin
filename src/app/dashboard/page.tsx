@@ -118,14 +118,6 @@ export default function Dashboard() {
                   ⚙️ Ir a Configuración de mi gimnasio →
                 </Link>
               )}
-              {user?.role === 'CLIENT' && (
-                <Link
-                  href="/dashboard/membership"
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
-                >
-                  🎫 Ir a Mi Membresía →
-                </Link>
-              )}
               {user?.role !== 'SUPER_ADMIN' && (
                 <Link
                   href="/dashboard/classes"
@@ -138,7 +130,7 @@ export default function Dashboard() {
                 href="/dashboard/reservations"
                 className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
               >
-                📅 Ir a {user?.role === 'CLIENT' ? 'Mis Reservas' : 'Reservas'} →
+                📅 Ir a Reservas →
               </Link>
               {(user?.role === 'ADMIN' || user?.role === 'STAFF') && (
                 <>

@@ -37,9 +37,10 @@ export default function LoginPage() {
         // 2. Actualizar el contexto
         login(data.user, data.access_token);
         
-        // 3. Pequeña pausa de seguridad antes de navegar
+        // 3. Pequeña pausa de seguridad antes de navegar. CLIENT usa el
+        // portal de socios (E6-02), no el panel operativo.
         setTimeout(() => {
-          window.location.href = '/dashboard';
+          window.location.href = data.user.role === 'CLIENT' ? '/portal' : '/dashboard';
         }, 100);
       } else {
         setError(data.message || 'Credenciales inválidas.');
