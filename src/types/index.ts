@@ -27,6 +27,10 @@ export interface Gym {
   mercadoPagoUserId?: string | null;
   createdAt?: string;
   updatedAt?: string;
+  // Solo presente en GET /gyms (panel multi-tenant SUPER_ADMIN, E6-05
+  // segunda mitad) — el backend lo agrega con un query agrupado, no es
+  // una columna real de la entidad.
+  activeMembersCount?: number;
 }
 
 // Un gimnasio puede tener varios planes (niveles/tiers, E6-04) — sin

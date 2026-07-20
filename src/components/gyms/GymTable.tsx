@@ -23,6 +23,7 @@ export function GymTable({ gyms }: GymTableProps) {
               <th className="px-6 py-4">Dirección</th>
               <th className="px-6 py-4">Timezone</th>
               <th className="px-6 py-4">Mercado Pago</th>
+              <th className="px-6 py-4 text-right">Socios activos</th>
               <th className="px-6 py-4 text-right">Acciones</th>
             </tr>
           </thead>
@@ -44,6 +45,9 @@ export function GymTable({ gyms }: GymTableProps) {
                       </span>
                     )}
                   </td>
+                  <td className="px-6 py-4 text-right font-medium text-slate-900">
+                    {gym.activeMembersCount ?? 0}
+                  </td>
                   <td className="px-6 py-4 text-right">
                     <Link
                       href={`/dashboard/gyms/${gym.id}`}
@@ -56,7 +60,7 @@ export function GymTable({ gyms }: GymTableProps) {
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
+                <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
                   No hay gimnasios registrados todavía.
                 </td>
               </tr>
