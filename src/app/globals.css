@@ -1,39 +1,120 @@
 @import "tailwindcss";
 
-/* Identidad "gimnasio boutique industrial" (2026-07-20, feedback del
-   usuario con fotos reales de un gimnasio) — negro mate cálido, acento
-   de madera para estructura/badges, un único acento de neón frío
-   reservado para links y el detalle de luz bajo los títulos. Un solo
-   tema a propósito, sin modo claro: la referencia real es un ambiente
-   oscuro, forzar un modo claro la traicionaría. */
+/* Dos temas: "madero" (oscuro, gimnasio boutique industrial — negro
+   mate, acentos de madera, un único acento de neón frío) y "claro" (el
+   esquema slate/indigo que tenía la app antes). El usuario pidió poder
+   elegir, no que uno reemplace al otro — ver ThemeToggle.
+
+   Cada token de color se define dos veces como variable CRUDA (--t-*):
+   una vez en :root (oscuro, default) y una vez bajo
+   :root[data-theme="light"]. El bloque @theme de Tailwind solo
+   REFERENCIA esas variables (--color-ink-950: var(--t-ink-950)), nunca
+   un valor fijo — así una sola clase de Tailwind (bg-ink-850, etc.)
+   sirve para los dos temas sin tocar ningún componente. */
+:root {
+  --t-ink-950: #121110;
+  --t-ink-900: #17110c;
+  --t-ink-850: #1a1816;
+  --t-ink-800: #201d1a;
+  --t-ink-700: #2a2521;
+  --t-ink-line: #f4f0e914;
+  --t-ink-line-strong: #f4f0e924;
+
+  --t-wood-700: #6b4a30;
+  --t-wood-600: #8a5c3a;
+  --t-wood-500: #a8734a;
+  --t-wood-400: #c08f5f;
+
+  --t-neon-500: #4fd1e0;
+  --t-neon-400: #7fe3f0;
+  --t-neon-300: #a9edf5;
+
+  --t-cream: #f4f0e9;
+  --t-cream-muted: #a89f92;
+  --t-cream-faint: #6f665b;
+
+  --t-success: #9fd48a;
+  --t-success-bg: #9fd48a1f;
+  --t-warn: #e8b04f;
+  --t-warn-bg: #e8b04f1f;
+  --t-pop: #e5533a;
+  --t-pop-bg: #e5533a24;
+
+  /* Casos puntuales que se usan como inline style (fuera de las clases
+     de Tailwind) y necesitan su propio par claro/oscuro. */
+  --t-nav-glass: rgba(18, 17, 16, 0.82);
+  --t-neon-glow: rgba(127, 227, 240, 0.35);
+
+  /* El sidebar de /dashboard es oscuro EN LOS DOS TEMAS a propósito —
+     así se veía la app original ("modo claro" = contenido claro, pero
+     el sidebar siempre fue oscuro, nunca hubo una versión clara de
+     él). Por eso estas dos variables NO se redefinen bajo
+     :root[data-theme="light"] — se quedan fijas siempre. */
+  --t-sidebar-top: #17110c;
+  --t-sidebar-deep: #0e0c0b;
+}
+
+:root[data-theme="light"] {
+  --t-ink-950: #f8fafc;
+  --t-ink-900: #f1f5f9;
+  --t-ink-850: #ffffff;
+  --t-ink-800: #f1f5f9;
+  --t-ink-700: #e2e8f0;
+  --t-ink-line: #f1f5f9;
+  --t-ink-line-strong: #e2e8f0;
+
+  --t-wood-700: #3730a3;
+  --t-wood-600: #4f46e5;
+  --t-wood-500: #6366f1;
+  --t-wood-400: #818cf8;
+
+  --t-neon-500: #4338ca;
+  --t-neon-400: #4f46e5;
+  --t-neon-300: #4338ca;
+
+  --t-cream: #0f172a;
+  --t-cream-muted: #64748b;
+  --t-cream-faint: #94a3b8;
+
+  --t-success: #047857;
+  --t-success-bg: #ecfdf5;
+  --t-warn: #b45309;
+  --t-warn-bg: #fffbeb;
+  --t-pop: #dc2626;
+  --t-pop-bg: #fef2f2;
+
+  --t-nav-glass: rgba(255, 255, 255, 0.82);
+  --t-neon-glow: rgba(79, 70, 229, 0.35);
+}
+
 @theme {
-  --color-ink-950: #121110;
-  --color-ink-900: #17110c;
-  --color-ink-850: #1a1816;
-  --color-ink-800: #201d1a;
-  --color-ink-700: #2a2521;
-  --color-ink-line: #f4f0e914;
-  --color-ink-line-strong: #f4f0e924;
+  --color-ink-950: var(--t-ink-950);
+  --color-ink-900: var(--t-ink-900);
+  --color-ink-850: var(--t-ink-850);
+  --color-ink-800: var(--t-ink-800);
+  --color-ink-700: var(--t-ink-700);
+  --color-ink-line: var(--t-ink-line);
+  --color-ink-line-strong: var(--t-ink-line-strong);
 
-  --color-wood-700: #6b4a30;
-  --color-wood-600: #8a5c3a;
-  --color-wood-500: #a8734a;
-  --color-wood-400: #c08f5f;
+  --color-wood-700: var(--t-wood-700);
+  --color-wood-600: var(--t-wood-600);
+  --color-wood-500: var(--t-wood-500);
+  --color-wood-400: var(--t-wood-400);
 
-  --color-neon-500: #4fd1e0;
-  --color-neon-400: #7fe3f0;
-  --color-neon-300: #a9edf5;
+  --color-neon-500: var(--t-neon-500);
+  --color-neon-400: var(--t-neon-400);
+  --color-neon-300: var(--t-neon-300);
 
-  --color-cream: #f4f0e9;
-  --color-cream-muted: #a89f92;
-  --color-cream-faint: #6f665b;
+  --color-cream: var(--t-cream);
+  --color-cream-muted: var(--t-cream-muted);
+  --color-cream-faint: var(--t-cream-faint);
 
-  --color-success: #9fd48a;
-  --color-success-bg: #9fd48a1f;
-  --color-warn: #e8b04f;
-  --color-warn-bg: #e8b04f1f;
-  --color-pop: #e5533a;
-  --color-pop-bg: #e5533a24;
+  --color-success: var(--t-success);
+  --color-success-bg: var(--t-success-bg);
+  --color-warn: var(--t-warn);
+  --color-warn-bg: var(--t-warn-bg);
+  --color-pop: var(--t-pop);
+  --color-pop-bg: var(--t-pop-bg);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -43,4 +124,32 @@ body {
   background: var(--color-ink-950);
   color: var(--color-cream);
   font-family: -apple-system, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* El sidebar (siempre oscuro, ver --t-sidebar-top/deep arriba) también
+   necesita texto/bordes que siempre lean bien sobre fondo oscuro —
+   :root[data-theme="light"] pisa el tema a un tono oscuro (pensado para
+   texto sobre el contenido claro), que sería ilegible acá adentro.
+
+   IMPORTANTE: acá se pisan las variables --color-* (las que Tailwind
+   realmente lee en el CSS generado, ej. `.text-cream { color:
+   var(--color-cream) }`), NO las --t-* intermedias. --color-cream ya
+   quedó "resuelta" a un valor fijo en :root (donde se declara
+   `--color-cream: var(--t-cream)`) — las custom properties de CSS no
+   vuelven a sustituir var() por elemento al heredarse, así que pisar
+   --t-cream acá adentro no alcanza para cambiar lo que ya heredó
+   --color-cream de :root. Hay que pisar el nombre final.
+
+   --color-wood-* NO se pisa a propósito — así el sidebar sigue
+   mostrando madera en oscuro e índigo en claro, coherente con el tema
+   elegido, aunque su fondo no cambie. */
+.sidebar-scope {
+  --color-cream: #f4f0e9;
+  --color-cream-muted: #a89f92;
+  --color-cream-faint: #6f665b;
+  --color-ink-line: #f4f0e914;
+  --color-ink-line-strong: #f4f0e924;
+  --color-pop: #e5533a;
+  --color-pop-bg: #e5533a24;
 }

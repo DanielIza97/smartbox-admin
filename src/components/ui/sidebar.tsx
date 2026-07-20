@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { LogoutButton } from './LogoutButton';
+import { ThemeToggle } from './ThemeToggle';
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -31,8 +32,8 @@ export function Sidebar() {
 
   return (
     <aside
-      className="w-64 text-cream-muted flex flex-col justify-between p-4 min-h-screen fixed left-0 top-0 z-40 border-r border-ink-line"
-      style={{ background: 'linear-gradient(185deg, var(--color-ink-900) 0%, #0e0c0b 60%)' }}
+      className="sidebar-scope w-64 text-cream-muted flex flex-col justify-between p-4 min-h-screen fixed left-0 top-0 z-40 border-r border-ink-line"
+      style={{ background: 'linear-gradient(185deg, var(--t-sidebar-top) 0%, var(--t-sidebar-deep) 60%)' }}
     >
       <div>
         <div className="mb-6 px-2 py-4 border-b border-ink-line text-center">
@@ -65,6 +66,8 @@ export function Sidebar() {
 
       {/* SECCIÓN DE USUARIO: Perfil y Logout */}
       <div className="border-t border-ink-line pt-3 space-y-1">
+        <ThemeToggle className="w-full flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold text-cream-muted hover:bg-ink-line hover:text-cream transition-all border-l-2 border-transparent" />
+
         <Link
           href="/dashboard/profile"
           className={`w-full flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold border-l-2 transition-all ${

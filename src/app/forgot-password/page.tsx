@@ -4,7 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { apiFetch } from '../../lib/api';
 import { Input } from '../../components/ui/input';
-import { Button } from '../../components/ui/button'; 
+import { Button } from '../../components/ui/button';
+import { ThemeToggle } from '@/components/ui/ThemeToggle'; 
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -39,7 +40,10 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-ink-950 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-ink-950 px-4 relative">
+      <div className="absolute top-5 right-5">
+        <ThemeToggle className="text-xs font-semibold text-cream-muted hover:text-cream border border-ink-line-strong rounded-full px-3 py-1.5 transition-colors" />
+      </div>
       <div className="w-full max-w-md bg-ink-850 p-8 rounded-2xl shadow-sm border border-ink-line">
         
         {/* Encabezado / Logo */}

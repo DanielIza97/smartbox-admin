@@ -6,6 +6,7 @@ import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { apiFetch } from '../../lib/api';
 import { useAuth } from '@/context/AuthContext';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 // E6-05 (Epic 6, v1.5): onboarding self-serve — un dueño de gimnasio
 // prospecto crea su gimnasio y su propia cuenta ADMIN en un solo paso,
@@ -62,7 +63,10 @@ export default function SignupGymPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-ink-950 px-4 py-8">
+    <div className="min-h-screen flex items-center justify-center bg-ink-950 px-4 py-8 relative">
+      <div className="absolute top-5 right-5">
+        <ThemeToggle className="text-xs font-semibold text-cream-muted hover:text-cream border border-ink-line-strong rounded-full px-3 py-1.5 transition-colors" />
+      </div>
       <div className="max-w-md w-full bg-ink-850 p-8 rounded-2xl shadow-sm border border-ink-line">
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-cream tracking-tight">SmartBox</h1>

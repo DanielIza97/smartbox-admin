@@ -38,7 +38,7 @@ export default function GymsPage() {
           <div className="flex justify-between items-center mb-8">
             <div>
               <h1 className="text-2xl font-bold text-cream">Gimnasios</h1>
-              <p className="text-cream-muted text-sm">Clientes del SaaS — alta manual, sin onboarding self-serve todavía.</p>
+              <p className="text-cream-muted text-sm">Clientes del SaaS — acá los que se dieron de alta manual; los gimnasios que se registraron solos vía /signup-gym también aparecen listados.</p>
             </div>
 
             <button

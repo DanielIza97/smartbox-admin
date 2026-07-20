@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { apiFetch } from '../../lib/api';
 import { Input } from '../../components/ui/input';   
 import { Button } from '../../components/ui/button';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -53,7 +54,10 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-ink-950 px-4 py-8">
+    <div className="min-h-screen flex items-center justify-center bg-ink-950 px-4 py-8 relative">
+      <div className="absolute top-5 right-5">
+        <ThemeToggle className="text-xs font-semibold text-cream-muted hover:text-cream border border-ink-line-strong rounded-full px-3 py-1.5 transition-colors" />
+      </div>
       <div className="max-w-md w-full bg-ink-850 p-8 rounded-2xl shadow-sm border border-ink-line">
         
         {/* Encabezado / Logo */}

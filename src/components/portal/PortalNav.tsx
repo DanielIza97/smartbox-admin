@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LogoutButton } from '@/components/ui/LogoutButton';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 const NAV_ITEMS = [
   { name: 'Mi Membresía', path: '/portal', icon: '🎫' },
@@ -19,7 +20,7 @@ export function PortalNav() {
   return (
     <header
       className="sticky top-0 z-20 border-b border-ink-line backdrop-blur-md"
-      style={{ background: 'rgba(18, 17, 16, 0.82)' }}
+      style={{ background: 'var(--t-nav-glass)' }}
     >
       <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
         <span className="text-base font-black text-cream tracking-widest uppercase">SmartBox</span>
@@ -47,6 +48,7 @@ export function PortalNav() {
           >
             <span>👤</span> Mi Perfil
           </Link>
+          <ThemeToggle className="px-3 py-2 rounded-md text-sm font-semibold text-cream-muted hover:text-cream transition-colors" />
           <LogoutButton className="px-3 py-2 rounded-md text-sm font-semibold text-pop hover:bg-pop-bg transition-colors" />
         </nav>
       </div>

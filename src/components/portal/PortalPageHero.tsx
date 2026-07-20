@@ -32,7 +32,7 @@ export function PortalPageHero({ icon, title, subtitle, action }: PortalPageHero
             <h1 className="text-3xl md:text-4xl font-black text-cream tracking-tight uppercase leading-none mb-2.5">{title}</h1>
             <span
               className="block w-16 h-0.5 bg-neon-400 mb-2.5"
-              style={{ boxShadow: '0 0 10px rgba(127,227,240,0.35)' }}
+              style={{ boxShadow: '0 0 10px var(--t-neon-glow)' }}
             />
             <p className="text-cream-muted text-sm">{subtitle}</p>
           </div>
