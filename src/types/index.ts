@@ -29,8 +29,8 @@ export interface Gym {
   updatedAt?: string;
 }
 
-// Un solo plan por gimnasio en v1.0 (unique en gym_id del lado del
-// backend) — sin niveles ni descuentos, eso es E6-04 (v1.5).
+// Un gimnasio puede tener varios planes (niveles/tiers, E6-04) — sin
+// descuentos ni cupones todavía, eso quedó fuera del alcance de E6-04.
 export interface Plan {
   id: string;
   name: string;

@@ -24,7 +24,7 @@ export function ShiftsSection({ gymId, canManage }: ShiftsSectionProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // GET /shifts no filtra por gym para SUPER_ADMIN — filtramos acá por
-  // staff.gym.id, mismo truco que PlanCard/ClassesSection con /plans y
+  // staff.gym.id, mismo truco que PlansSection/ClassesSection con /plans y
   // /classes (no hay un GET /shifts?gymId en el backend).
   const loadShifts = useCallback(async () => {
     try {

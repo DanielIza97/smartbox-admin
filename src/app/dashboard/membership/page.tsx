@@ -5,23 +5,28 @@ import { Sidebar } from '@/components/ui/sidebar';
 import { MembershipStatusCard } from '@/components/memberships/MembershipStatusCard';
 import { InvoiceTable } from '@/components/memberships/InvoiceTable';
 import { apiFetch } from '@/lib/api';
-import { Membership, Invoice } from '@/types';
+import { Membership, Invoice, Plan } from '@/types';
 
 export default function MembershipPage() {
   const [membership, setMembership] = useState<Membership | null>(null);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // GET /plans ya viene scopeado al propio gimnasio para CLIENT — E6-04:
+  // puede haber varios, el socio elige a cuál suscribirse.
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
-      const [membershipRes, invoicesRes] = await Promise.all([
+      const [membershipRes, invoicesRes, plansRes] = await Promise.all([
         apiFetch('/memberships/me'),
         apiFetch('/memberships/me/invoices'),
+        apiFetch('/plans'),
       ]);
 
       setMembership(membershipRes.status === 404 ? null : await membershipRes.json());
       setInvoices(invoicesRes.ok ? await invoicesRes.json() : []);
+      setPlans(plansRes.ok ? await plansRes.json() : []);
     } catch (error) {
       console.error('Error al cargar la membresía:', error);
     } finally {
@@ -52,7 +57,7 @@ export default function MembershipPage() {
             </div>
           ) : (
             <>
-              <MembershipStatusCard membership={membership} onChange={setMembership} />
+              <MembershipStatusCard membership={membership} plans={plans} onChange={setMembership} />
               <InvoiceTable invoices={invoices} />
             </>
           )}

@@ -21,7 +21,7 @@ export function ClassesSection({ gymId, canManage }: ClassesSectionProps) {
   // GET /classes trae todas las del gimnasio para SUPER_ADMIN y solo las
   // propias para ADMIN/STAFF/CLIENT — filtrar por gymId acá cubre ambos
   // casos sin necesitar un GET /classes?gymId en el backend (mismo truco
-  // que PlanCard/GymDetailPage con /plans).
+  // que PlansSection con /plans).
   const loadClasses = useCallback(async () => {
     try {
       setLoading(true);

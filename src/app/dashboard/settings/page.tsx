@@ -4,10 +4,10 @@ import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Sidebar } from '@/components/ui/sidebar';
 import { MercadoPagoConnectionCard } from '@/components/gyms/MercadoPagoConnectionCard';
-import { PlanCard } from '@/components/plans/PlanCard';
+import { PlansSection } from '@/components/plans/PlansSection';
 import { apiFetch } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
-import { Gym, Plan } from '@/types';
+import { Gym } from '@/types';
 
 function MercadoPagoStatusBanner() {
   const searchParams = useSearchParams();
@@ -33,7 +33,6 @@ function MercadoPagoStatusBanner() {
 export default function SettingsPage() {
   const { user } = useAuth();
   const [gym, setGym] = useState<Gym | null>(null);
-  const [plan, setPlan] = useState<Plan | null>(null);
   const [loading, setLoading] = useState(true);
 
   const loadGym = useCallback(async () => {
@@ -53,22 +52,9 @@ export default function SettingsPage() {
     }
   }, [user?.gymId]);
 
-  // GET /plans ya viene scopeado al propio gimnasio para ADMIN/STAFF — a lo
-  // sumo un elemento, por el unique en gym_id del backend.
-  const loadPlan = useCallback(async () => {
-    try {
-      const res = await apiFetch('/plans');
-      const plans: Plan[] = res.ok ? await res.json() : [];
-      setPlan(plans[0] ?? null);
-    } catch (error) {
-      console.error('Error al cargar el plan:', error);
-    }
-  }, []);
-
   useEffect(() => {
     loadGym();
-    loadPlan();
-  }, [loadGym, loadPlan]);
+  }, [loadGym]);
 
   return (
     <div className="flex min-h-screen bg-slate-50">
@@ -119,12 +105,10 @@ export default function SettingsPage() {
                 canConnect={user.role === 'SUPER_ADMIN' || user.role === 'ADMIN'}
               />
 
-              <PlanCard
+              <PlansSection
                 gymId={gym.id}
-                plan={plan}
                 canManage={user.role === 'SUPER_ADMIN' || user.role === 'ADMIN'}
                 mercadoPagoConnected={!!gym.mercadoPagoUserId}
-                onCreated={setPlan}
               />
             </div>
           )}

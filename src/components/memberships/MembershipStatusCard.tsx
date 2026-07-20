@@ -1,12 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { ConfirmationModal } from '../ui/ConfirmationModel';
-import { Membership } from '@/types';
+import { Membership, Plan } from '@/types';
 
 interface MembershipStatusCardProps {
   membership: Membership | null;
+  // E6-04: un gimnasio puede tener varios planes — el socio elige a cuál
+  // suscribirse antes de ir al checkout de Mercado Pago.
+  plans: Plan[];
   onChange: (membership: Membership) => void;
 }
 
@@ -31,17 +34,31 @@ function formatDate(value?: string | null) {
   });
 }
 
-export function MembershipStatusCard({ membership, onChange }: MembershipStatusCardProps) {
+export function MembershipStatusCard({ membership, plans, onChange }: MembershipStatusCardProps) {
+  const [selectedPlanId, setSelectedPlanId] = useState(plans[0]?.id ?? '');
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [error, setError] = useState('');
 
+  // plans llega async del padre — si todavía no había nada seleccionado
+  // cuando terminó de cargar, preseleccionamos el primero.
+  useEffect(() => {
+    if (!selectedPlanId && plans.length > 0) {
+      setSelectedPlanId(plans[0].id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plans]);
+
   const handleSubscribe = async () => {
+    if (!selectedPlanId) return;
     setIsSubscribing(true);
     setError('');
     try {
-      const res = await apiFetch('/memberships/subscribe', { method: 'POST' });
+      const res = await apiFetch('/memberships/subscribe', {
+        method: 'POST',
+        body: JSON.stringify({ planId: selectedPlanId }),
+      });
       const data = await res.json();
       if (res.ok && data.checkoutUrl) {
         // Checkout hosted de Mercado Pago para cargar la tarjeta — cero UI
@@ -128,13 +145,50 @@ export function MembershipStatusCard({ membership, onChange }: MembershipStatusC
       )}
 
       {canSubscribe && (
-        <button
-          onClick={handleSubscribe}
-          disabled={isSubscribing}
-          className="mt-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-70 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm transition-all"
-        >
-          {isSubscribing ? 'Redirigiendo...' : 'Suscribirme'}
-        </button>
+        <div className="mt-4">
+          {plans.length === 0 ? (
+            <p className="text-sm text-slate-500">
+              Tu gimnasio todavía no tiene planes de membresía configurados.
+            </p>
+          ) : (
+            <>
+              <div className="space-y-2 mb-4">
+                {plans.map((plan) => (
+                  <label
+                    key={plan.id}
+                    className={`flex items-center justify-between gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${
+                      selectedPlanId === plan.id
+                        ? 'border-indigo-600 bg-indigo-50/50'
+                        : 'border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    <span className="flex items-center gap-3">
+                      <input
+                        type="radio"
+                        name="planId"
+                        value={plan.id}
+                        checked={selectedPlanId === plan.id}
+                        onChange={() => setSelectedPlanId(plan.id)}
+                        className="accent-indigo-600"
+                      />
+                      <span className="text-sm font-medium text-slate-900">{plan.name}</span>
+                    </span>
+                    <span className="text-sm text-slate-500">
+                      ${(plan.priceCents / 100).toFixed(2)} USD/mes
+                    </span>
+                  </label>
+                ))}
+              </div>
+              <button
+                onClick={handleSubscribe}
+                disabled={isSubscribing || !selectedPlanId}
+                className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-70 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm transition-all"
+              >
+                {isSubscribing ? 'Redirigiendo...' : 'Suscribirme'}
+              </button>
+            </>
+          )}
+        </div>
       )}
 
       {membership && membership.status === 'active' && !membership.cancelAtPeriodEnd && (
