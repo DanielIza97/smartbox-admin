@@ -97,6 +97,12 @@ export default function LoginPage() {
           <Button type="submit" isLoading={isLoading}>
             Entrar
           </Button>
+
+          <div className="text-center pt-2">
+            <Link href="/signup-gym" className="text-xs font-medium text-blue-600 hover:underline">
+              ¿Sos dueño de un gimnasio? Creá tu cuenta
+            </Link>
+          </div>
         </form>
       </div>
     </div>
