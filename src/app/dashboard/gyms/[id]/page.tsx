@@ -7,6 +7,8 @@ import { Sidebar } from '@/components/ui/sidebar';
 import { MercadoPagoConnectionCard } from '@/components/gyms/MercadoPagoConnectionCard';
 import { PlanCard } from '@/components/plans/PlanCard';
 import { ClassesSection } from '@/components/classes/ClassesSection';
+import { ShiftsSection } from '@/components/shifts/ShiftsSection';
+import { ReportsSection } from '@/components/reports/ReportsSection';
 import { apiFetch } from '@/lib/api';
 import { Gym, Plan } from '@/types';
 
@@ -49,7 +51,7 @@ export default function GymDetailPage() {
       <Sidebar />
 
       <main className="flex-1 pl-64 w-full">
-        <div className="p-8 max-w-3xl">
+        <div className="p-8 max-w-5xl">
           <Link
             href="/dashboard/gyms"
             className="text-sm font-medium text-slate-500 hover:text-slate-700 mb-6 inline-block"
@@ -96,6 +98,10 @@ export default function GymDetailPage() {
               />
 
               <ClassesSection gymId={gym.id} canManage />
+
+              <ShiftsSection gymId={gym.id} canManage />
+
+              <ReportsSection gymId={gym.id} canViewRevenue />
             </div>
           )}
         </div>

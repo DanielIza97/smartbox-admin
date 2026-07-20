@@ -26,6 +26,13 @@ export function proxy(req: NextRequest) {
     // Autogestión de la propia membresía (E2-07) — solo CLIENT, mismos
     // roles que POST /memberships/subscribe y GET /memberships/me.
     '/dashboard/membership': ['CLIENT'],
+    // Turnos de trabajo del STAFF (E4-02) — operativo, sin CLIENT, igual
+    // que GET /shifts en el backend.
+    '/dashboard/shifts': ['SUPER_ADMIN', 'ADMIN', 'STAFF'],
+    // Reportes de ocupación/ingresos (E4-03) — GET /reports/revenue es
+    // ADMIN-only en el backend, pero la página igual es visible para STAFF
+    // (solo ve ocupación); sin CLIENT.
+    '/dashboard/reports': ['SUPER_ADMIN', 'ADMIN', 'STAFF'],
   };
 
   const isProtected = pathname.startsWith('/dashboard');

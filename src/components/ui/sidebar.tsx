@@ -19,6 +19,8 @@ export function Sidebar() {
     { name: 'Clases', path: '/dashboard/classes', icon: '🧘', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF', 'CLIENT'] },
     { name: 'Reservas', path: '/dashboard/reservations', icon: '📅', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF', 'CLIENT'] },
     { name: 'Mi Membresía', path: '/dashboard/membership', icon: '🎫', roles: ['CLIENT'] },
+    { name: 'Turnos de Staff', path: '/dashboard/shifts', icon: '🗓️', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF'] },
+    { name: 'Reportes', path: '/dashboard/reports', icon: '📈', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF'] },
     { name: 'Usuarios y Roles', path: '/dashboard/users', icon: '👥', roles: ['SUPER_ADMIN', 'ADMIN'] },
     { name: 'Historial de Pagos', path: '/dashboard/payments', icon: '💳', roles: ['SUPER_ADMIN', 'ADMIN'] },
     { name: 'Configuración', path: '/dashboard/settings', icon: '⚙️', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF'] },

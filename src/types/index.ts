@@ -4,6 +4,9 @@ export interface User {
   email: string;
   role: any;
   description?: string;
+  // Presente en GET /users (relations: role, gym) — ausente en el User
+  // más liviano de AuthContext.
+  gym?: { id: string } | null;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -106,4 +109,50 @@ export interface Reservation {
   status: ReservationStatus;
   createdAt?: string;
   updatedAt?: string;
+}
+
+// Horario de trabajo recurrente de un STAFF (E4-02) — desacoplado de
+// ClassOrResource a propósito, responde "qué días/horas trabaja cada
+// empleado", no "quién dicta esta clase". Sin CLIENT en ningún endpoint,
+// es operativo.
+export interface Shift {
+  id: string;
+  staffId: string;
+  staff?: { id: string; name: string; email?: string; gym?: { id: string } };
+  // 0 = domingo ... 6 = sábado.
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface OccupancySlot {
+  classId: string;
+  className: string;
+  startAt: string;
+  endAt: string;
+  capacity: number;
+  booked: number;
+  occupancyRate: number;
+}
+
+export interface OccupancyReport {
+  from: string;
+  to: string;
+  slots: OccupancySlot[];
+  averageOccupancyRate: number;
+}
+
+export interface RevenueDay {
+  date: string;
+  totalCents: number;
+}
+
+export interface RevenueReport {
+  from: string;
+  to: string;
+  days: RevenueDay[];
+  totalCents: number;
+  activeMembersCount: number;
 }

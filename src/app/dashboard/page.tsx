@@ -140,6 +140,22 @@ export default function Dashboard() {
               >
                 📅 Ir a {user?.role === 'CLIENT' ? 'Mis Reservas' : 'Reservas'} →
               </Link>
+              {(user?.role === 'ADMIN' || user?.role === 'STAFF') && (
+                <>
+                  <Link
+                    href="/dashboard/shifts"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+                  >
+                    🗓️ Ir a Turnos de Staff →
+                  </Link>
+                  <Link
+                    href="/dashboard/reports"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+                  >
+                    📈 Ir a Reportes →
+                  </Link>
+                </>
+              )}
             </div>
           </section>
         </div>
