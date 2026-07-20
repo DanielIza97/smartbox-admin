@@ -5,6 +5,7 @@ import { useRef, useState, type CSSProperties, type ReactNode } from 'react';
 interface TiltCardProps {
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
   // Cards grandes se ven mejor con menos inclinación que las chicas.
   maxTilt?: number;
 }
@@ -12,7 +13,7 @@ interface TiltCardProps {
 // Profundidad 3D sin librerías: inclina la tarjeta siguiendo el mouse
 // dentro de sus límites (perspective + rotateX/rotateY), vuelve a plano
 // al salir.
-export function TiltCard({ children, className = '', maxTilt = 8 }: TiltCardProps) {
+export function TiltCard({ children, className = '', style: extraStyle, maxTilt = 8 }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<CSSProperties>({
     transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg)',
@@ -38,7 +39,7 @@ export function TiltCard({ children, className = '', maxTilt = 8 }: TiltCardProp
       ref={ref}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{ ...style, transition: 'transform 0.15s ease-out' }}
+      style={{ ...extraStyle, ...style, transition: 'transform 0.15s ease-out' }}
       className={className}
     >
       {children}

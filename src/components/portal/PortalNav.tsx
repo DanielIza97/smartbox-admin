@@ -17,9 +17,12 @@ export function PortalNav() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-20 border-b border-white/60 bg-white/70 backdrop-blur-md shadow-sm">
+    <header
+      className="sticky top-0 z-20 border-b border-ink-line backdrop-blur-md"
+      style={{ background: 'rgba(18, 17, 16, 0.82)' }}
+    >
       <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-        <span className="text-lg font-bold text-slate-950 tracking-tight">SmartBox</span>
+        <span className="text-base font-black text-cream tracking-widest uppercase">SmartBox</span>
 
         <nav className="flex items-center gap-1">
           {NAV_ITEMS.map((item) => {
@@ -28,8 +31,8 @@ export function PortalNav() {
               <Link
                 key={item.path}
                 href={item.path}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-semibold transition-colors border-b-2 ${
+                  isActive ? 'text-cream border-neon-400' : 'text-cream-muted border-transparent hover:text-cream'
                 }`}
               >
                 <span>{item.icon}</span> {item.name}
@@ -38,13 +41,13 @@ export function PortalNav() {
           })}
           <Link
             href="/portal/profile"
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-              pathname === '/portal/profile' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-semibold transition-colors border-b-2 ${
+              pathname === '/portal/profile' ? 'text-cream border-neon-400' : 'text-cream-muted border-transparent hover:text-cream'
             }`}
           >
             <span>👤</span> Mi Perfil
           </Link>
-          <LogoutButton className="px-3 py-2 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 transition-colors" />
+          <LogoutButton className="px-3 py-2 rounded-md text-sm font-semibold text-pop hover:bg-pop-bg transition-colors" />
         </nav>
       </div>
     </header>

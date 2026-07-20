@@ -9,7 +9,7 @@ export default function ReservationsPage() {
   const canCancel = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-ink-950">
       <Sidebar />
 
       <main className="flex-1 pl-64 w-full">

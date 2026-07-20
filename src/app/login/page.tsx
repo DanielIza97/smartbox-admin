@@ -54,16 +54,16 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
-      <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+    <div className="min-h-screen flex items-center justify-center bg-ink-950 px-4">
+      <div className="max-w-md w-full bg-ink-850 p-8 rounded-2xl shadow-sm border border-ink-line">
         
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-950 tracking-tight">SmartBox</h1>
-          <p className="text-sm text-slate-500 mt-2">Ingresa tus credenciales</p>
+          <h1 className="text-3xl font-bold text-cream tracking-tight">SmartBox</h1>
+          <p className="text-sm text-cream-muted mt-2">Ingresa tus credenciales</p>
         </div>
 
         {error && (
-          <div className="mb-6 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm font-medium">
+          <div className="mb-6 p-3 bg-pop-bg border border-pop/30 text-pop rounded-lg text-sm font-medium">
             {error}
           </div>
         )}
@@ -89,7 +89,7 @@ export default function LoginPage() {
             />
             
             <div className="text-right">
-              <Link href="/forgot-password" className="text-xs font-medium text-blue-600 hover:underline">
+              <Link href="/forgot-password" className="text-xs font-medium text-neon-400 hover:underline">
                 ¿Olvidaste tu contraseña?
               </Link>
             </div>
@@ -100,7 +100,7 @@ export default function LoginPage() {
           </Button>
 
           <div className="text-center pt-2">
-            <Link href="/signup-gym" className="text-xs font-medium text-blue-600 hover:underline">
+            <Link href="/signup-gym" className="text-xs font-medium text-neon-400 hover:underline">
               ¿Sos dueño de un gimnasio? Creá tu cuenta
             </Link>
           </div>

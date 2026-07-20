@@ -9,15 +9,15 @@ interface GymTableProps {
 
 export function GymTable({ gyms }: GymTableProps) {
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-slate-200 shadow-sm bg-white">
-      <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
-        <h2 className="text-base font-bold text-slate-900">Listado de Gimnasios</h2>
-        <span className="text-xs font-semibold text-slate-500 uppercase">{gyms.length} Registros</span>
+    <div className="w-full overflow-hidden rounded-xl border border-ink-line-strong shadow-sm bg-ink-850">
+      <div className="px-6 py-4 border-b border-ink-line bg-ink-900/50 flex justify-between items-center">
+        <h2 className="text-base font-bold text-cream">Listado de Gimnasios</h2>
+        <span className="text-xs font-semibold text-cream-muted uppercase">{gyms.length} Registros</span>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full text-sm text-left text-slate-600">
-          <thead className="text-xs uppercase bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+        <table className="min-w-full text-sm text-left text-cream-muted">
+          <thead className="text-xs uppercase bg-ink-950 text-cream-muted font-semibold border-b border-ink-line-strong">
             <tr>
               <th className="px-6 py-4">Nombre</th>
               <th className="px-6 py-4">Dirección</th>
@@ -27,31 +27,31 @@ export function GymTable({ gyms }: GymTableProps) {
               <th className="px-6 py-4 text-right">Acciones</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-ink-line">
             {gyms.length > 0 ? (
               gyms.map((gym) => (
-                <tr key={gym.id} className="hover:bg-slate-50 transition-colors group">
-                  <td className="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">{gym.name}</td>
+                <tr key={gym.id} className="hover:bg-ink-950 transition-colors group">
+                  <td className="px-6 py-4 font-medium text-cream whitespace-nowrap">{gym.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{gym.address || '—'}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{gym.timezone}</td>
                   <td className="px-6 py-4">
                     {gym.mercadoPagoUserId ? (
-                      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full">
-                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" /> Conectado
+                      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-success bg-success-bg border border-success/30 px-2.5 py-1 rounded-full">
+                        <span className="w-1.5 h-1.5 bg-success rounded-full" /> Conectado
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-100 px-2.5 py-1 rounded-full">
-                        <span className="w-1.5 h-1.5 bg-amber-500 rounded-full" /> Sin conectar
+                      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-warn bg-warn-bg border border-warn/30 px-2.5 py-1 rounded-full">
+                        <span className="w-1.5 h-1.5 bg-warn rounded-full" /> Sin conectar
                       </span>
                     )}
                   </td>
-                  <td className="px-6 py-4 text-right font-medium text-slate-900">
+                  <td className="px-6 py-4 text-right font-medium text-cream">
                     {gym.activeMembersCount ?? 0}
                   </td>
                   <td className="px-6 py-4 text-right">
                     <Link
                       href={`/dashboard/gyms/${gym.id}`}
-                      className="text-indigo-600 hover:text-indigo-800 font-semibold transition-colors"
+                      className="text-neon-400 hover:text-neon-300 font-semibold transition-colors"
                     >
                       Ver detalle
                     </Link>
@@ -60,7 +60,7 @@ export function GymTable({ gyms }: GymTableProps) {
               ))
             ) : (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
+                <td colSpan={6} className="px-6 py-12 text-center text-cream-faint">
                   No hay gimnasios registrados todavía.
                 </td>
               </tr>

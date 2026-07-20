@@ -20,9 +20,9 @@ const STATUS_LABEL: Record<Membership['status'], string> = {
 };
 
 const STATUS_STYLE: Record<Membership['status'], string> = {
-  active: 'text-emerald-700 bg-emerald-50 border-emerald-100',
-  past_due: 'text-amber-700 bg-amber-50 border-amber-100',
-  cancelled: 'text-slate-500 bg-slate-100 border-slate-200',
+  active: 'text-success bg-success-bg border-success/30',
+  past_due: 'text-warn bg-warn-bg border-warn/30',
+  cancelled: 'text-cream-muted bg-ink-800 border-ink-line-strong',
 };
 
 function formatDate(value?: string | null) {
@@ -97,9 +97,9 @@ export function MembershipStatusCard({ membership, plans, onChange }: Membership
   const canSubscribe = !membership || membership.status === 'cancelled';
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+    <div className="bg-ink-850 rounded-2xl shadow-sm border border-ink-line p-6">
       <div className="flex items-center justify-between mb-1">
-        <h2 className="text-lg font-bold text-slate-900">Mi membresía</h2>
+        <h2 className="text-lg font-bold text-cream">Mi membresía</h2>
         {membership && (
           <span
             className={`inline-flex items-center gap-1.5 text-xs font-semibold border px-2.5 py-1 rounded-full ${STATUS_STYLE[membership.status]}`}
@@ -110,33 +110,33 @@ export function MembershipStatusCard({ membership, plans, onChange }: Membership
         )}
       </div>
 
-      {error && <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm my-4">{error}</div>}
+      {error && <div className="p-3 bg-pop-bg text-pop rounded-lg text-sm my-4">{error}</div>}
 
       {!membership ? (
-        <p className="text-sm text-slate-500 mb-4">Todavía no tenés una membresía.</p>
+        <p className="text-sm text-cream-muted mb-4">Todavía no tenés una membresía.</p>
       ) : (
         <div className="mt-4 space-y-3 text-sm">
           <div>
-            <p className="text-xs font-semibold text-slate-400 uppercase">Plan</p>
-            <p className="text-slate-900">
+            <p className="text-xs font-semibold text-cream-faint uppercase">Plan</p>
+            <p className="text-cream">
               {membership.plan?.name || '—'}
               {membership.plan && ` — $${(membership.plan.priceCents / 100).toFixed(2)} USD/mes`}
             </p>
           </div>
           {membership.trialEndsAt && new Date(membership.trialEndsAt) > new Date() && (
-            <p className="text-slate-500">
+            <p className="text-cream-muted">
               En período de prueba hasta {formatDate(membership.trialEndsAt)}.
             </p>
           )}
           {membership.status !== 'cancelled' && (
-            <p className="text-slate-500">
+            <p className="text-cream-muted">
               {membership.cancelAtPeriodEnd
                 ? `Se cancelará el ${formatDate(membership.currentPeriodEnd)} y no se renovará.`
                 : `Tu período actual vence el ${formatDate(membership.currentPeriodEnd)}.`}
             </p>
           )}
           {membership.status === 'past_due' && (
-            <p className="text-amber-700">
+            <p className="text-warn">
               Tu último cobro fue rechazado. Actualizá tu tarjeta desde tu propia cuenta de
               Mercado Pago (Débitos automáticos) — no perdés el acceso todavía.
             </p>
@@ -147,7 +147,7 @@ export function MembershipStatusCard({ membership, plans, onChange }: Membership
       {canSubscribe && (
         <div className="mt-4">
           {plans.length === 0 ? (
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-cream-muted">
               Tu gimnasio todavía no tiene planes de membresía configurados.
             </p>
           ) : (
@@ -158,8 +158,8 @@ export function MembershipStatusCard({ membership, plans, onChange }: Membership
                     key={plan.id}
                     className={`flex items-center justify-between gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${
                       selectedPlanId === plan.id
-                        ? 'border-indigo-600 bg-indigo-50/50'
-                        : 'border-slate-200 hover:bg-slate-50'
+                        ? 'border-wood-500 bg-ink-900/50'
+                        : 'border-ink-line-strong hover:bg-ink-950'
                     }`}
                   >
                     <span className="flex items-center gap-3">
@@ -171,9 +171,9 @@ export function MembershipStatusCard({ membership, plans, onChange }: Membership
                         onChange={() => setSelectedPlanId(plan.id)}
                         className="accent-indigo-600"
                       />
-                      <span className="text-sm font-medium text-slate-900">{plan.name}</span>
+                      <span className="text-sm font-medium text-cream">{plan.name}</span>
                     </span>
-                    <span className="text-sm text-slate-500">
+                    <span className="text-sm text-cream-muted">
                       ${(plan.priceCents / 100).toFixed(2)} USD/mes
                     </span>
                   </label>
@@ -182,7 +182,7 @@ export function MembershipStatusCard({ membership, plans, onChange }: Membership
               <button
                 onClick={handleSubscribe}
                 disabled={isSubscribing || !selectedPlanId}
-                className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-70 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm transition-all"
+                className="bg-wood-600 hover:bg-wood-500 disabled:opacity-70 text-cream font-semibold px-5 py-2.5 rounded-xl shadow-sm transition-all"
               >
                 {isSubscribing ? 'Redirigiendo...' : 'Suscribirme'}
               </button>
@@ -195,7 +195,7 @@ export function MembershipStatusCard({ membership, plans, onChange }: Membership
         <button
           onClick={() => setConfirmOpen(true)}
           disabled={isCancelling}
-          className="mt-4 text-sm font-semibold text-red-600 hover:text-red-700 disabled:opacity-70 transition-colors"
+          className="mt-4 text-sm font-semibold text-pop hover:text-pop disabled:opacity-70 transition-colors"
         >
           {isCancelling ? 'Cancelando...' : 'Cancelar membresía'}
         </button>

@@ -86,22 +86,22 @@ export function ClassDetailContent({ classId, classesHref, reservationsHref }: C
     <>
       <Link
         href={classesHref}
-        className="text-sm font-medium text-slate-500 hover:text-slate-700 mb-6 inline-block"
+        className="text-sm font-medium text-cream-muted hover:text-cream-muted mb-6 inline-block"
       >
         ← Volver a Clases
       </Link>
 
       {loading ? (
-        <div className="flex items-center justify-center py-20 text-slate-500">Cargando datos...</div>
+        <div className="flex items-center justify-center py-20 text-cream-muted">Cargando datos...</div>
       ) : notFound || !cls ? (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 text-slate-500">
+        <div className="bg-ink-850 rounded-2xl shadow-sm border border-ink-line p-6 text-cream-muted">
           Clase no encontrada.
         </div>
       ) : (
         <div className="space-y-6">
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-            <h1 className="text-2xl font-bold text-slate-900">{cls.name}</h1>
-            <p className="text-sm text-slate-500 mt-1">
+          <div className="bg-ink-850 rounded-2xl shadow-sm border border-ink-line p-6">
+            <h1 className="text-2xl font-bold text-cream">{cls.name}</h1>
+            <p className="text-sm text-cream-muted mt-1">
               Todas las semanas los {DAYS[cls.dayOfWeek]} a las {cls.startTime} ({cls.durationMinutes} min,
               cupo {cls.capacity})
             </p>
@@ -111,8 +111,8 @@ export function ClassDetailContent({ classId, classesHref, reservationsHref }: C
             <div
               className={`p-4 rounded-xl text-sm font-medium ${
                 message.type === 'success'
-                  ? 'bg-emerald-50 border border-emerald-200 text-emerald-700'
-                  : 'bg-red-50 border border-red-200 text-red-600'
+                  ? 'bg-success-bg border border-success/30 text-success'
+                  : 'bg-pop-bg border border-pop/30 text-pop'
               }`}
             >
               {message.text}
@@ -127,17 +127,17 @@ export function ClassDetailContent({ classId, classesHref, reservationsHref }: C
             </div>
           )}
 
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-              <h2 className="text-base font-bold text-slate-900">Próximos turnos</h2>
+          <div className="bg-ink-850 rounded-2xl shadow-sm border border-ink-line overflow-hidden">
+            <div className="px-6 py-4 border-b border-ink-line bg-ink-900/50">
+              <h2 className="text-base font-bold text-cream">Próximos turnos</h2>
             </div>
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-ink-line">
               {slots.length > 0 ? (
                 slots.map((slot) => (
                   <div key={slot.startAt} className="px-6 py-4 flex items-center justify-between text-sm">
                     <div>
-                      <p className="text-slate-900 font-medium">{formatSlot(slot.startAt, slot.endAt)}</p>
-                      <p className="text-slate-400 text-xs mt-0.5">
+                      <p className="text-cream font-medium">{formatSlot(slot.startAt, slot.endAt)}</p>
+                      <p className="text-cream-faint text-xs mt-0.5">
                         {slot.available} de {slot.capacity} cupos disponibles
                       </p>
                     </div>
@@ -145,7 +145,7 @@ export function ClassDetailContent({ classId, classesHref, reservationsHref }: C
                       <button
                         onClick={() => handleReserve(slot)}
                         disabled={slot.available === 0 || reservingSlot === slot.startAt}
-                        className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-4 py-2 rounded-xl shadow-sm transition-all text-xs"
+                        className="bg-wood-600 hover:bg-wood-500 disabled:opacity-50 disabled:cursor-not-allowed text-cream font-semibold px-4 py-2 rounded-xl shadow-sm transition-all text-xs"
                       >
                         {reservingSlot === slot.startAt
                           ? 'Reservando...'
@@ -157,7 +157,7 @@ export function ClassDetailContent({ classId, classesHref, reservationsHref }: C
                   </div>
                 ))
               ) : (
-                <div className="px-6 py-12 text-center text-slate-400">
+                <div className="px-6 py-12 text-center text-cream-faint">
                   No hay turnos disponibles en los próximos días.
                 </div>
               )}

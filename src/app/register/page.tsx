@@ -53,28 +53,28 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4 py-8">
-      <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+    <div className="min-h-screen flex items-center justify-center bg-ink-950 px-4 py-8">
+      <div className="max-w-md w-full bg-ink-850 p-8 rounded-2xl shadow-sm border border-ink-line">
         
         {/* Encabezado / Logo */}
         <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-slate-950 tracking-tight">
+          <h1 className="text-3xl font-bold text-cream tracking-tight">
             SmartBox
           </h1>
-          <p className="text-sm text-slate-500 mt-2">
+          <p className="text-sm text-cream-muted mt-2">
             Crea una nueva cuenta en la plataforma
           </p>
         </div>
 
         {/* Alertas Visuales */}
         {error && (
-          <div className="mb-5 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm font-medium">
+          <div className="mb-5 p-3 bg-pop-bg border border-pop/30 text-pop rounded-lg text-sm font-medium">
             {error}
           </div>
         )}
 
         {successMessage && (
-          <div className="mb-5 p-3 bg-green-50 border border-green-200 text-green-600 rounded-lg text-sm font-medium">
+          <div className="mb-5 p-3 bg-success-bg border border-success/30 text-success rounded-lg text-sm font-medium">
             {successMessage}
           </div>
         )}
@@ -116,11 +116,11 @@ export default function RegisterPage() {
 
           {/* Enlace para volver al Login */}
           <div className="text-center pt-2">
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-cream-muted">
               ¿Ya tienes una cuenta?{' '}
               <Link
                 href="/login"
-                className="font-semibold text-indigo-600 hover:text-indigo-700 hover:underline transition-colors"
+                className="font-semibold text-neon-400 hover:text-neon-300 hover:underline transition-colors"
               >
                 Inicia sesión aquí
               </Link>

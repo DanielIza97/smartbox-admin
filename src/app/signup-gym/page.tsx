@@ -62,24 +62,24 @@ export default function SignupGymPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4 py-8">
-      <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+    <div className="min-h-screen flex items-center justify-center bg-ink-950 px-4 py-8">
+      <div className="max-w-md w-full bg-ink-850 p-8 rounded-2xl shadow-sm border border-ink-line">
         <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-slate-950 tracking-tight">SmartBox</h1>
-          <p className="text-sm text-slate-500 mt-2">
+          <h1 className="text-3xl font-bold text-cream tracking-tight">SmartBox</h1>
+          <p className="text-sm text-cream-muted mt-2">
             Dá de alta tu gimnasio y creá tu cuenta de administrador
           </p>
         </div>
 
         {error && (
-          <div className="mb-5 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm font-medium">
+          <div className="mb-5 p-3 bg-pop-bg border border-pop/30 text-pop rounded-lg text-sm font-medium">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-4">
-            <p className="text-xs font-semibold text-slate-400 uppercase">Tu gimnasio</p>
+            <p className="text-xs font-semibold text-cream-faint uppercase">Tu gimnasio</p>
             <Input
               label="Nombre del gimnasio"
               required
@@ -100,8 +100,8 @@ export default function SignupGymPage() {
             />
           </div>
 
-          <div className="space-y-4 pt-2 border-t border-slate-100">
-            <p className="text-xs font-semibold text-slate-400 uppercase pt-4">Tu cuenta</p>
+          <div className="space-y-4 pt-2 border-t border-ink-line">
+            <p className="text-xs font-semibold text-cream-faint uppercase pt-4">Tu cuenta</p>
             <Input
               label="Tu nombre"
               required
@@ -132,7 +132,7 @@ export default function SignupGymPage() {
           </Button>
 
           <div className="text-center pt-2">
-            <Link href="/login" className="text-xs font-medium text-blue-600 hover:underline">
+            <Link href="/login" className="text-xs font-medium text-neon-400 hover:underline">
               ¿Ya tenés cuenta? Iniciá sesión
             </Link>
           </div>

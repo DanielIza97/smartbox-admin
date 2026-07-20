@@ -50,13 +50,13 @@ export function ReservationsContent({
       {!hideHeader && (
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">{title}</h1>
-            <p className="text-slate-500 text-sm">{subtitle}</p>
+            <h1 className="text-2xl font-bold text-cream">{title}</h1>
+            <p className="text-cream-muted text-sm">{subtitle}</p>
           </div>
           {newReservationHref && (
             <Link
               href={newReservationHref}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm transition-all text-sm"
+              className="bg-wood-600 hover:bg-wood-500 text-cream font-semibold px-5 py-2.5 rounded-xl shadow-sm transition-all text-sm"
             >
               + Nueva reserva
             </Link>
@@ -65,7 +65,7 @@ export function ReservationsContent({
       )}
 
       {loading ? (
-        <div className="flex items-center justify-center py-20 text-slate-500">Cargando datos...</div>
+        <div className="flex items-center justify-center py-20 text-cream-muted">Cargando datos...</div>
       ) : (
         <ReservationTable
           reservations={reservations}

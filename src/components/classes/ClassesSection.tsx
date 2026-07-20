@@ -51,7 +51,7 @@ export function ClassesSection({ gymId, canManage, detailBasePath }: ClassesSect
         <div className="flex justify-end">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm transition-all text-sm"
+            className="bg-wood-600 hover:bg-wood-500 text-cream font-semibold px-5 py-2.5 rounded-xl shadow-sm transition-all text-sm"
           >
             + Nueva clase
           </button>
@@ -59,7 +59,7 @@ export function ClassesSection({ gymId, canManage, detailBasePath }: ClassesSect
       )}
 
       {loading ? (
-        <div className="flex items-center justify-center py-12 text-slate-500">Cargando clases...</div>
+        <div className="flex items-center justify-center py-12 text-cream-muted">Cargando clases...</div>
       ) : (
         <ClassTable classes={classes} detailBasePath={detailBasePath} />
       )}

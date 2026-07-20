@@ -15,9 +15,9 @@ export function Button({
   const baseStyles = "w-full mt-2 py-3 px-4 font-medium rounded-xl transition-all text-sm shadow-sm flex items-center justify-center disabled:opacity-70";
   
   const variantStyles = {
-    primary: "bg-indigo-600 hover:bg-indigo-700 text-white disabled:bg-indigo-400",
-    ghost: "bg-transparent text-slate-600 hover:bg-slate-100 border border-slate-200",
-    secondary: "bg-slate-200 text-slate-800 hover:bg-slate-300 disabled:bg-slate-100"
+    primary: "bg-wood-600 hover:bg-wood-500 text-cream disabled:bg-wood-700",
+    ghost: "bg-transparent text-cream-muted hover:bg-ink-line border border-ink-line-strong",
+    secondary: "bg-ink-800 text-cream hover:bg-ink-700 disabled:bg-ink-850 border border-ink-line"
   };
 
   return (

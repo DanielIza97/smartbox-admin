@@ -7,9 +7,9 @@ import { ReservationsContent } from '@/components/reservations/ReservationsConte
 
 export default function PortalReservationsPage() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-8 md:p-16">
-      <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-indigo-300/30 blur-2xl" />
-      <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-purple-300/30 blur-2xl" />
+    <div className="relative min-h-screen overflow-hidden bg-ink-950 p-8 md:p-16">
+      <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-wood-500/20 blur-2xl" />
+      <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-wood-500/15 blur-2xl" />
 
       <div className="relative z-10 max-w-5xl mx-auto space-y-6">
         <PortalPageHero
@@ -19,7 +19,7 @@ export default function PortalReservationsPage() {
           action={
             <Link
               href="/portal/classes"
-              className="bg-white/20 hover:bg-white/30 text-white font-semibold px-5 py-2.5 rounded-xl border border-white/30 transition-all text-sm"
+              className="bg-ink-800/60 hover:bg-ink-700/70 text-cream font-semibold px-5 py-2.5 rounded-xl border border-wood-600/40 transition-all text-sm"
             >
               + Nueva reserva
             </Link>

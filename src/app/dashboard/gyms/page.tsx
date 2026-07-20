@@ -30,27 +30,27 @@ export default function GymsPage() {
   }, [loadGyms]);
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-ink-950">
       <Sidebar />
 
       <main className="flex-1 pl-64 w-full">
         <div className="p-8">
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">Gimnasios</h1>
-              <p className="text-slate-500 text-sm">Clientes del SaaS — alta manual, sin onboarding self-serve todavía.</p>
+              <h1 className="text-2xl font-bold text-cream">Gimnasios</h1>
+              <p className="text-cream-muted text-sm">Clientes del SaaS — alta manual, sin onboarding self-serve todavía.</p>
             </div>
 
             <button
               onClick={() => setIsCreateModalOpen(true)}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-2"
+              className="bg-wood-600 hover:bg-wood-500 text-cream font-semibold px-5 py-2.5 rounded-xl shadow-sm transition-all flex items-center gap-2"
             >
               <span>🏢+</span> Dar de alta gimnasio
             </button>
           </div>
 
           {loading && gyms.length === 0 ? (
-            <div className="flex items-center justify-center py-20 text-slate-500">
+            <div className="flex items-center justify-center py-20 text-cream-muted">
               Cargando datos...
             </div>
           ) : (

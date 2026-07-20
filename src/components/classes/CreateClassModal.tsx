@@ -62,14 +62,14 @@ export function CreateClassModal({ isOpen, gymId, onClose, onSuccess }: CreateCl
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-      <div className="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl border border-slate-100 space-y-5 relative">
-        <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-          <h3 className="text-lg font-bold text-slate-950">Nueva clase o recurso</h3>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600">✕</button>
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+      <div className="bg-ink-850 w-full max-w-md rounded-2xl p-6 shadow-xl border border-ink-line space-y-5 relative">
+        <div className="flex justify-between items-center border-b border-ink-line pb-3">
+          <h3 className="text-lg font-bold text-cream">Nueva clase o recurso</h3>
+          <button onClick={onClose} className="text-cream-faint hover:text-cream-muted">✕</button>
         </div>
 
-        {error && <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">{error}</div>}
+        {error && <div className="p-3 bg-pop-bg text-pop rounded-lg text-sm">{error}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
@@ -81,11 +81,11 @@ export function CreateClassModal({ isOpen, gymId, onClose, onSuccess }: CreateCl
           />
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Día de la semana</label>
+            <label className="block text-sm font-medium text-cream-muted mb-1.5">Día de la semana</label>
             <select
               value={formData.dayOfWeek}
               onChange={(e) => setFormData({ ...formData, dayOfWeek: e.target.value })}
-              className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition-all text-sm"
+              className="w-full px-4 py-2.5 bg-ink-850 border border-ink-line-strong rounded-xl text-cream focus:outline-none focus:ring-2 focus:ring-neon-400/25 focus:border-neon-400 transition-all text-sm"
             >
               {DAYS.map((day, idx) => (
                 <option key={idx} value={idx}>{day}</option>

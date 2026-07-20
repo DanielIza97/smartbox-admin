@@ -62,26 +62,26 @@ function ResetPasswordForm() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+    <div className="flex min-h-screen items-center justify-center bg-ink-950 px-4">
+      <div className="w-full max-w-md bg-ink-850 p-8 rounded-2xl shadow-sm border border-ink-line">
         <div className="text-center mb-6">
-          <h2 className="text-3xl font-bold text-slate-950 tracking-tight mb-2">
+          <h2 className="text-3xl font-bold text-cream tracking-tight mb-2">
             Nueva Contraseña
           </h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-cream-muted">
             Establece tu nueva contraseña de acceso para SmartBox.
           </p>
         </div>
 
         {!token ? (
           <div className="space-y-4">
-            <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm font-medium text-center">
+            <div className="p-3 bg-pop-bg border border-pop/30 text-pop rounded-lg text-sm font-medium text-center">
               Enlace inválido o sin token de acceso. Por favor solicita uno nuevo.
             </div>
             <div className="text-center">
               <Link
                 href="/forgot-password"
-                className="text-xs font-medium text-blue-600 hover:underline"
+                className="text-xs font-medium text-neon-400 hover:underline"
               >
                 Solicitar nuevo enlace
               </Link>
@@ -109,13 +109,13 @@ function ResetPasswordForm() {
             />
 
             {message && (
-              <div className="p-3 bg-green-50 border border-green-200 text-green-600 rounded-lg text-sm font-medium">
+              <div className="p-3 bg-success-bg border border-success/30 text-success rounded-lg text-sm font-medium">
                 {message}
               </div>
             )}
 
             {error && (
-              <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm font-medium">
+              <div className="p-3 bg-pop-bg border border-pop/30 text-pop rounded-lg text-sm font-medium">
                 {error}
               </div>
             )}
@@ -127,7 +127,7 @@ function ResetPasswordForm() {
             <div className="text-center pt-2">
               <Link
                 href="/login"
-                className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-indigo-600 transition-colors group"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-cream-muted hover:text-neon-300 transition-colors group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +135,7 @@ function ResetPasswordForm() {
                   viewBox="0 0 24 24"
                   strokeWidth={2}
                   stroke="currentColor"
-                  className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition-colors"
+                  className="w-3.5 h-3.5 text-cream-faint group-hover:text-neon-300 transition-colors"
                 >
                   <path
                     strokeLinecap="round"

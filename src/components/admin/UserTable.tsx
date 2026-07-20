@@ -15,13 +15,13 @@ interface ConfirmationModalProps {
 function ConfirmationModal({ isOpen, title, message, onConfirm, onCancel }: ConfirmationModalProps) {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-4 border border-slate-100">
-        <h3 className="text-lg font-bold text-slate-950">{title}</h3>
-        <p className="text-sm text-slate-500">{message}</p>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+      <div className="bg-ink-850 rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-4 border border-ink-line">
+        <h3 className="text-lg font-bold text-cream">{title}</h3>
+        <p className="text-sm text-cream-muted">{message}</p>
         <div className="flex gap-3 pt-2">
-          <button onClick={onCancel} className="flex-1 px-4 py-2 text-sm font-semibold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors">Cancelar</button>
-          <button onClick={onConfirm} className="flex-1 px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-xl hover:bg-red-700 transition-colors">Confirmar</button>
+          <button onClick={onCancel} className="flex-1 px-4 py-2 text-sm font-semibold text-cream-muted bg-ink-800 rounded-xl hover:bg-ink-700 transition-colors">Cancelar</button>
+          <button onClick={onConfirm} className="flex-1 px-4 py-2 text-sm font-semibold text-cream bg-pop rounded-xl hover:opacity-90 transition-colors">Confirmar</button>
         </div>
       </div>
     </div>
@@ -56,15 +56,15 @@ export function UserTable({ users, onDelete, onEdit }: UserTableProps) {
 
   return (
     <>
-      <div className="w-full overflow-hidden rounded-xl border border-slate-200 shadow-sm bg-white">
-        <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
-          <h2 className="text-base font-bold text-slate-900">Listado de Usuarios</h2>
-          <span className="text-xs font-semibold text-slate-500 uppercase">{users.length} Registros</span>
+      <div className="w-full overflow-hidden rounded-xl border border-ink-line-strong shadow-sm bg-ink-850">
+        <div className="px-6 py-4 border-b border-ink-line bg-ink-900/50 flex justify-between items-center">
+          <h2 className="text-base font-bold text-cream">Listado de Usuarios</h2>
+          <span className="text-xs font-semibold text-cream-muted uppercase">{users.length} Registros</span>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full text-sm text-left text-slate-600">
-            <thead className="text-xs uppercase bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+          <table className="min-w-full text-sm text-left text-cream-muted">
+            <thead className="text-xs uppercase bg-ink-950 text-cream-muted font-semibold border-b border-ink-line-strong">
               <tr>
                 <th className="px-6 py-4">Nombre</th>
                 <th className="px-6 py-4">Email</th>
@@ -72,11 +72,11 @@ export function UserTable({ users, onDelete, onEdit }: UserTableProps) {
                 <th className="px-6 py-4 text-right">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-ink-line">
               {users.length > 0 ? (
                 users.map((user: User) => (
-                  <tr key={user.id} className="hover:bg-slate-50 transition-colors group">
-                    <td className="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">{user.name}</td>
+                  <tr key={user.id} className="hover:bg-ink-950 transition-colors group">
+                    <td className="px-6 py-4 font-medium text-cream whitespace-nowrap">{user.name}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
                     <td className="px-6 py-4 capitalize">
                       {typeof user.role === 'object' && user.role !== null ? user.role.name : user.role}
@@ -84,14 +84,14 @@ export function UserTable({ users, onDelete, onEdit }: UserTableProps) {
                     <td className="px-6 py-4 text-right space-x-4">
                       <button 
                         onClick={() => onEdit(user)}
-                        className="text-indigo-600 hover:text-indigo-800 font-semibold transition-colors"
+                        className="text-neon-400 hover:text-neon-300 font-semibold transition-colors"
                       >
                         Editar
                       </button>
                       <button 
                         onClick={() => setUserToDelete(user)}
                         disabled={loadingId === user.id}
-                        className="text-red-600 hover:text-red-800 font-semibold transition-colors disabled:opacity-50"
+                        className="text-pop hover:text-pop font-semibold transition-colors disabled:opacity-50"
                       >
                         {loadingId === user.id ? '...' : 'Eliminar'}
                       </button>
@@ -100,7 +100,7 @@ export function UserTable({ users, onDelete, onEdit }: UserTableProps) {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-slate-400">
+                  <td colSpan={4} className="px-6 py-12 text-center text-cream-faint">
                     No hay usuarios registrados en el sistema.
                   </td>
                 </tr>

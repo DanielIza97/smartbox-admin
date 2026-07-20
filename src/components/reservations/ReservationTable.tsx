@@ -22,9 +22,9 @@ const STATUS_LABEL: Record<Reservation['status'], string> = {
 };
 
 const STATUS_STYLE: Record<Reservation['status'], string> = {
-  confirmed: 'text-emerald-700 bg-emerald-50 border-emerald-100',
-  cancelled: 'text-slate-500 bg-slate-100 border-slate-200',
-  expired: 'text-slate-400 bg-slate-50 border-slate-200',
+  confirmed: 'text-success bg-success-bg border-success/30',
+  cancelled: 'text-cream-muted bg-ink-800 border-ink-line-strong',
+  expired: 'text-cream-faint bg-ink-950 border-ink-line-strong',
 };
 
 function formatSlot(startAt: string, endAt: string) {
@@ -63,16 +63,16 @@ export function ReservationTable({ reservations, canCancel, onCancelled }: Reser
   };
 
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-slate-200 shadow-sm bg-white">
-      <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-        <h2 className="text-base font-bold text-slate-900">Reservas</h2>
+    <div className="w-full overflow-hidden rounded-xl border border-ink-line-strong shadow-sm bg-ink-850">
+      <div className="px-6 py-4 border-b border-ink-line bg-ink-900/50">
+        <h2 className="text-base font-bold text-cream">Reservas</h2>
       </div>
 
-      {error && <div className="p-4 bg-red-50 text-red-600 text-sm">{error}</div>}
+      {error && <div className="p-4 bg-pop-bg text-pop text-sm">{error}</div>}
 
       <div className="overflow-x-auto">
-        <table className="min-w-full text-sm text-left text-slate-600">
-          <thead className="text-xs uppercase bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+        <table className="min-w-full text-sm text-left text-cream-muted">
+          <thead className="text-xs uppercase bg-ink-950 text-cream-muted font-semibold border-b border-ink-line-strong">
             <tr>
               <th className="px-6 py-4">Clase</th>
               <th className="px-6 py-4">Horario</th>
@@ -80,11 +80,11 @@ export function ReservationTable({ reservations, canCancel, onCancelled }: Reser
               {canCancel && <th className="px-6 py-4 text-right">Acciones</th>}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-ink-line">
             {reservations.length > 0 ? (
               reservations.map((r) => (
-                <tr key={r.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">
+                <tr key={r.id} className="hover:bg-ink-950 transition-colors">
+                  <td className="px-6 py-4 font-medium text-cream whitespace-nowrap">
                     {r.classOrResource?.name || '—'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">{formatSlot(r.startAt, r.endAt)}</td>
@@ -102,7 +102,7 @@ export function ReservationTable({ reservations, canCancel, onCancelled }: Reser
                         <button
                           onClick={() => setConfirmTarget(r)}
                           disabled={cancellingId === r.id}
-                          className="text-red-600 hover:text-red-700 disabled:opacity-70 font-semibold transition-colors"
+                          className="text-pop hover:text-pop disabled:opacity-70 font-semibold transition-colors"
                         >
                           {cancellingId === r.id ? 'Cancelando...' : 'Cancelar'}
                         </button>
@@ -113,7 +113,7 @@ export function ReservationTable({ reservations, canCancel, onCancelled }: Reser
               ))
             ) : (
               <tr>
-                <td colSpan={canCancel ? 4 : 3} className="px-6 py-12 text-center text-slate-400">
+                <td colSpan={canCancel ? 4 : 3} className="px-6 py-12 text-center text-cream-faint">
                   Todavía no hay reservas.
                 </td>
               </tr>

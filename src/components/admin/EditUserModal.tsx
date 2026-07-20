@@ -46,18 +46,18 @@ export function EditUserModal({ isOpen, onClose, user, roles, onSuccess }: EditU
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl border border-slate-100 space-y-5">
-        <h3 className="text-lg font-bold text-slate-950">Editar Usuario: {user?.name}</h3>
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-ink-850 w-full max-w-md rounded-2xl p-6 shadow-xl border border-ink-line space-y-5">
+        <h3 className="text-lg font-bold text-cream">Editar Usuario: {user?.name}</h3>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input label="Nombre" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
           <Input label="Email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
           
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-slate-950">Rol</label>
+            <label className="text-sm font-medium text-cream">Rol</label>
             <select 
-              className="w-full pl-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-white text-slate-900" 
+              className="w-full pl-4 py-2.5 border border-ink-line-strong rounded-xl text-sm bg-ink-850 text-cream" 
               value={formData.roleId} 
               onChange={(e) => setFormData({...formData, roleId: e.target.value})}
             >

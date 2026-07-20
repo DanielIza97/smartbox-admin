@@ -48,12 +48,12 @@ export function PlansSection({ gymId, canManage, mercadoPagoConnected }: PlansSe
           {mercadoPagoConnected ? (
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm transition-all text-sm"
+              className="bg-wood-600 hover:bg-wood-500 text-cream font-semibold px-5 py-2.5 rounded-xl shadow-sm transition-all text-sm"
             >
               + Nuevo plan
             </button>
           ) : (
-            <p className="text-xs text-slate-400 italic">
+            <p className="text-xs text-cream-faint italic">
               Conectá Mercado Pago antes de crear planes.
             </p>
           )}
@@ -61,7 +61,7 @@ export function PlansSection({ gymId, canManage, mercadoPagoConnected }: PlansSe
       )}
 
       {loading ? (
-        <div className="flex items-center justify-center py-12 text-slate-500">Cargando planes...</div>
+        <div className="flex items-center justify-center py-12 text-cream-muted">Cargando planes...</div>
       ) : (
         <PlanTable plans={plans} />
       )}
