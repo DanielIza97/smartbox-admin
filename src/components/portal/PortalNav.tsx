@@ -17,8 +17,8 @@ export function PortalNav() {
   const pathname = usePathname();
 
   return (
-    <header className="border-b border-slate-200 bg-white">
-      <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+    <header className="sticky top-0 z-20 border-b border-white/60 bg-white/70 backdrop-blur-md shadow-sm">
+      <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
         <span className="text-lg font-bold text-slate-950 tracking-tight">SmartBox</span>
 
         <nav className="flex items-center gap-1">

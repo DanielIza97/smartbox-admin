@@ -1,6 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { PortalPageHero } from '@/components/portal/PortalPageHero';
+import { TiltCard } from '@/components/ui/TiltCard';
 import { MembershipStatusCard } from '@/components/memberships/MembershipStatusCard';
 import { InvoiceTable } from '@/components/memberships/InvoiceTable';
 import { apiFetch } from '@/lib/api';
@@ -36,20 +38,30 @@ export default function PortalMembershipPage() {
   }, [loadData]);
 
   return (
-    <div className="max-w-3xl mx-auto p-8 space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Mi membresía</h1>
-        <p className="text-slate-500 text-sm">Estado de tu suscripción y tu historial de facturas.</p>
-      </div>
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-8 md:p-16">
+      <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-indigo-300/30 blur-2xl" />
+      <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-purple-300/30 blur-2xl" />
 
-      {loading ? (
-        <div className="flex items-center justify-center py-20 text-slate-500">Cargando datos...</div>
-      ) : (
-        <>
-          <MembershipStatusCard membership={membership} plans={plans} onChange={setMembership} />
-          <InvoiceTable invoices={invoices} />
-        </>
-      )}
+      <div className="relative z-10 max-w-3xl mx-auto space-y-6">
+        <PortalPageHero
+          icon="🎫"
+          title="Mi Membresía"
+          subtitle="Estado de tu suscripción y tu historial de facturas."
+        />
+
+        {loading ? (
+          <div className="flex items-center justify-center py-20 text-slate-500">Cargando datos...</div>
+        ) : (
+          <>
+            <TiltCard className="rounded-3xl">
+              <MembershipStatusCard membership={membership} plans={plans} onChange={setMembership} />
+            </TiltCard>
+            <TiltCard maxTilt={3} className="rounded-3xl">
+              <InvoiceTable invoices={invoices} />
+            </TiltCard>
+          </>
+        )}
+      </div>
     </div>
   );
 }
