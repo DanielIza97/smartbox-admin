@@ -1,12 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { apiFetch } from '../../lib/api';
-import { Input } from '../../components/ui/input';   
+import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+
+interface PublicGym {
+  id: string;
+  name: string;
+}
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -14,9 +19,29 @@ export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [gymId, setGymId] = useState('');
+  const [gyms, setGyms] = useState<PublicGym[]>([]);
+  const [loadingGyms, setLoadingGyms] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+
+  useEffect(() => {
+    const loadGyms = async () => {
+      try {
+        const res = await apiFetch('/auth/gyms');
+        const data: PublicGym[] = res.ok ? await res.json() : [];
+        setGyms(data);
+        if (data.length > 0) setGymId(data[0].id);
+      } catch (err) {
+        console.error('Error al cargar gimnasios:', err);
+      } finally {
+        setLoadingGyms(false);
+      }
+    };
+
+    loadGyms();
+  }, []);
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,7 +53,7 @@ export default function RegisterPage() {
     try {
       const res = await apiFetch('/auth/register', {
         method: 'POST',
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, gymId }),
       });
 
       const data = await res.json();
@@ -59,7 +84,7 @@ export default function RegisterPage() {
         <ThemeToggle className="text-xs font-semibold text-cream-muted hover:text-cream border border-ink-line-strong rounded-full px-3 py-1.5 transition-colors" />
       </div>
       <div className="max-w-md w-full bg-ink-850 p-8 rounded-2xl shadow-sm border border-ink-line">
-        
+
         {/* Encabezado / Logo */}
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-cream tracking-tight">
@@ -80,6 +105,12 @@ export default function RegisterPage() {
         {successMessage && (
           <div className="mb-5 p-3 bg-success-bg border border-success/30 text-success rounded-lg text-sm font-medium">
             {successMessage}
+          </div>
+        )}
+
+        {!loadingGyms && gyms.length === 0 && !successMessage && (
+          <div className="mb-5 p-3 bg-warn-bg border border-warn/30 text-warn rounded-lg text-sm font-medium">
+            Todavía no hay ningún gimnasio dado de alta en SmartBox — no podés registrarte como socio hasta que exista uno.
           </div>
         )}
 
@@ -113,8 +144,27 @@ export default function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
+          <div>
+            <label className="block text-sm font-medium text-cream-muted mb-1.5">
+              Gimnasio al que te unís
+            </label>
+            <select
+              required
+              disabled={loadingGyms || gyms.length === 0}
+              value={gymId}
+              onChange={(e) => setGymId(e.target.value)}
+              className="w-full px-4 py-2.5 bg-ink-800 border border-ink-line-strong rounded-xl text-cream focus:outline-none focus:ring-2 focus:ring-neon-400/20 focus:border-neon-400 transition-all text-sm disabled:opacity-60"
+            >
+              {loadingGyms && <option value="">Cargando gimnasios...</option>}
+              {!loadingGyms && gyms.length === 0 && <option value="">Sin gimnasios disponibles</option>}
+              {gyms.map((gym) => (
+                <option key={gym.id} value={gym.id}>{gym.name}</option>
+              ))}
+            </select>
+          </div>
+
           {/* Tu Button con control de carga e hijos dinámicos */}
-          <Button type="submit" isLoading={isLoading}>
+          <Button type="submit" isLoading={isLoading} disabled={gyms.length === 0}>
             {isLoading ? 'Registrando cuenta...' : 'Registrarse'}
           </Button>
 

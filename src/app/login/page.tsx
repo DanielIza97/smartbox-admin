@@ -103,10 +103,17 @@ export default function LoginPage() {
             Entrar
           </Button>
 
-          <div className="text-center pt-2">
-            <Link href="/signup-gym" className="text-xs font-medium text-neon-400 hover:underline">
-              ¿Sos dueño de un gimnasio? Creá tu cuenta
-            </Link>
+          <div className="text-center pt-2 space-y-1.5">
+            <p>
+              <Link href="/signup-gym" className="text-xs font-medium text-neon-400 hover:underline">
+                ¿Sos dueño de un gimnasio? Creá tu cuenta
+              </Link>
+            </p>
+            <p>
+              <Link href="/register" className="text-xs font-medium text-neon-400 hover:underline">
+                ¿Sos socio de un gimnasio? Registrate
+              </Link>
+            </p>
           </div>
         </form>
       </div>
