@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Dos temas: "oscuro" (negro mate, acento azul-morado/índigo, un
+/* Dos temas: "oscuro" (gris plateado, acento azul-morado/índigo, un
    único acento de neón frío) y "claro" (fondo blanco/azul, mismo
    acento índigo). El usuario pidió poder elegir, no que uno reemplace
    al otro — ver ThemeToggle.
@@ -20,13 +20,13 @@
    un valor fijo — así una sola clase de Tailwind (bg-ink-850, etc.)
    sirve para los dos temas sin tocar ningún componente. */
 :root {
-  --t-ink-950: #0b0a0c;
-  --t-ink-900: #121016;
-  --t-ink-850: #1f1c24;
-  --t-ink-800: #29262f;
-  --t-ink-700: #37333d;
-  --t-ink-line: #f4f0e914;
-  --t-ink-line-strong: #f4f0e924;
+  --t-ink-950: #24262b;
+  --t-ink-900: #2c2e34;
+  --t-ink-850: #383a42;
+  --t-ink-800: #45474f;
+  --t-ink-700: #565961;
+  --t-ink-line: #f4f0e91f;
+  --t-ink-line-strong: #f4f0e930;
 
   --t-wood-700: #4338ca;
   --t-wood-600: #6366f1;
@@ -50,7 +50,7 @@
 
   /* Casos puntuales que se usan como inline style (fuera de las clases
      de Tailwind) y necesitan su propio par claro/oscuro. */
-  --t-nav-glass: rgba(18, 17, 16, 0.82);
+  --t-nav-glass: rgba(36, 38, 43, 0.82);
   --t-neon-glow: rgba(127, 227, 240, 0.35);
 
   /* El sidebar de /dashboard es oscuro EN LOS DOS TEMAS a propósito —
@@ -58,12 +58,12 @@
      el sidebar siempre fue oscuro, nunca hubo una versión clara de
      él). Por eso estas dos variables NO se redefinen bajo
      :root[data-theme="light"] — se quedan fijas siempre.
-     Valores neutro/azulados (no marrón) — el fondo del sidebar quedó
-     con un undertone cálido/marrón (#17110c/#0e0c0b, R>G>B) cuando se
-     sacó el acento "madera" de --t-wood-*; el usuario lo siguió viendo
-     como "color madera" porque el fondo, no el acento, era lo marrón. */
-  --t-sidebar-top: #121016;
-  --t-sidebar-deep: #08080b;
+     2026-07-21: el usuario pidió "un plateado" — el modo oscuro pasó
+     de negro mate (#0b0a0c) a un gris plateado más claro, aplicado a
+     todo el tema (--t-ink-*) y acá también, para que el sidebar quede
+     en la misma familia en vez de un negro más oscuro que el resto. */
+  --t-sidebar-top: #2c2e34;
+  --t-sidebar-deep: #1c1e22;
 }
 
 :root[data-theme="light"] {
