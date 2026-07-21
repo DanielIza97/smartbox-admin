@@ -12,18 +12,24 @@ export function Sidebar() {
   const userRole = user?.role || '';
   const initial = (user?.name || user?.email || '?').trim().charAt(0).toUpperCase();
 
+  // Clases/Turnos/Reportes/Configuración operan sobre "mi propio gimnasio"
+  // (resuelven gymId desde user.gymId) — SUPER_ADMIN no tiene gymId propio,
+  // así que estos links eran un callejón sin salida para ese rol. La
+  // función real para SUPER_ADMIN ya existe entrando por Gimnasios →
+  // detalle de un gimnasio (GymDetailPage embebe las mismas secciones con
+  // gymId explícito) — no se duplica acá, solo se saca el link roto.
   const menuItems = [
     { name: 'Inicio / Métricas', path: '/dashboard', icon: '📊', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF'] },
     { name: 'Gimnasios', path: '/dashboard/gyms', icon: '🏢', roles: ['SUPER_ADMIN'] },
-    { name: 'Pods SmartBox (IoT)', path: '/dashboard/pods', icon: '📦', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF', 'DEVICE'] },
-    { name: 'Clases', path: '/dashboard/classes', icon: '🧘', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF'] },
+    { name: 'Pods SmartBox (IoT)', path: '/dashboard/pods', icon: '📦', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF', 'DEVICE'], comingSoon: true },
+    { name: 'Clases', path: '/dashboard/classes', icon: '🧘', roles: ['ADMIN', 'STAFF'] },
     { name: 'Reservas', path: '/dashboard/reservations', icon: '📅', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF'] },
-    { name: 'Turnos de Staff', path: '/dashboard/shifts', icon: '🗓️', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF'] },
-    { name: 'Reportes', path: '/dashboard/reports', icon: '📈', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF'] },
+    { name: 'Turnos de Staff', path: '/dashboard/shifts', icon: '🗓️', roles: ['ADMIN', 'STAFF'] },
+    { name: 'Reportes', path: '/dashboard/reports', icon: '📈', roles: ['ADMIN', 'STAFF'] },
     { name: 'Usuarios y Roles', path: '/dashboard/users', icon: '👥', roles: ['SUPER_ADMIN', 'ADMIN'] },
-    { name: 'Historial de Pagos', path: '/dashboard/payments', icon: '💳', roles: ['SUPER_ADMIN', 'ADMIN'] },
-    { name: 'Configuración', path: '/dashboard/settings', icon: '⚙️', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF'] },
-    { name: 'Auditoría y Logs', path: '/dashboard/logs', icon: '📜', roles: ['SUPER_ADMIN'] },
+    { name: 'Historial de Pagos', path: '/dashboard/payments', icon: '💳', roles: ['SUPER_ADMIN', 'ADMIN'], comingSoon: true },
+    { name: 'Configuración', path: '/dashboard/settings', icon: '⚙️', roles: ['ADMIN', 'STAFF'] },
+    { name: 'Auditoría y Logs', path: '/dashboard/logs', icon: '📜', roles: ['SUPER_ADMIN'], comingSoon: true },
   ];
 
   // Filtramos los items basándonos en el rol que viene del contexto
@@ -44,6 +50,22 @@ export function Sidebar() {
 
         <nav className="space-y-0.5">
           {filteredItems.map((item) => {
+            if (item.comingSoon) {
+              return (
+                <div
+                  key={item.path}
+                  title="Próximamente"
+                  className="w-full flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold border-l-2 border-transparent text-cream-faint opacity-60 cursor-not-allowed"
+                >
+                  <span className="text-base">{item.icon}</span>
+                  {item.name}
+                  <span className="ml-auto text-[9px] font-bold uppercase tracking-wider bg-ink-950 px-1.5 py-0.5 rounded-full">
+                    Pronto
+                  </span>
+                </div>
+              );
+            }
+
             const isActive = pathname === item.path || (item.path !== '/dashboard' && pathname.startsWith(item.path));
             return (
               <Link
