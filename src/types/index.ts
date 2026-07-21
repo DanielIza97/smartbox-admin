@@ -5,8 +5,9 @@ export interface User {
   role: any;
   description?: string;
   // Presente en GET /users (relations: role, gym) — ausente en el User
-  // más liviano de AuthContext.
-  gym?: { id: string } | null;
+  // más liviano de AuthContext. null para SUPER_ADMIN (no pertenece a
+  // ningún gimnasio).
+  gym?: { id: string; name: string } | null;
   createdAt?: string;
   updatedAt?: string;
 }

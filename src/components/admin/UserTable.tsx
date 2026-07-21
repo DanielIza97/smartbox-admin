@@ -69,6 +69,7 @@ export function UserTable({ users, onDelete, onEdit }: UserTableProps) {
                 <th className="px-6 py-4">Nombre</th>
                 <th className="px-6 py-4">Email</th>
                 <th className="px-6 py-4">Rol</th>
+                <th className="px-6 py-4">Gimnasio</th>
                 <th className="px-6 py-4 text-right">Acciones</th>
               </tr>
             </thead>
@@ -80,6 +81,9 @@ export function UserTable({ users, onDelete, onEdit }: UserTableProps) {
                     <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
                     <td className="px-6 py-4 capitalize">
                       {typeof user.role === 'object' && user.role !== null ? user.role.name : user.role}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {user.gym?.name ?? <span className="text-cream-faint">—</span>}
                     </td>
                     <td className="px-6 py-4 text-right space-x-4">
                       <button 
@@ -100,7 +104,7 @@ export function UserTable({ users, onDelete, onEdit }: UserTableProps) {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-cream-faint">
+                  <td colSpan={5} className="px-6 py-12 text-center text-cream-faint">
                     No hay usuarios registrados en el sistema.
                   </td>
                 </tr>
