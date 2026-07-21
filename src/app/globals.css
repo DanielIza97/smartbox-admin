@@ -57,9 +57,13 @@
      así se veía la app original ("modo claro" = contenido claro, pero
      el sidebar siempre fue oscuro, nunca hubo una versión clara de
      él). Por eso estas dos variables NO se redefinen bajo
-     :root[data-theme="light"] — se quedan fijas siempre. */
-  --t-sidebar-top: #17110c;
-  --t-sidebar-deep: #0e0c0b;
+     :root[data-theme="light"] — se quedan fijas siempre.
+     Valores neutro/azulados (no marrón) — el fondo del sidebar quedó
+     con un undertone cálido/marrón (#17110c/#0e0c0b, R>G>B) cuando se
+     sacó el acento "madera" de --t-wood-*; el usuario lo siguió viendo
+     como "color madera" porque el fondo, no el acento, era lo marrón. */
+  --t-sidebar-top: #121016;
+  --t-sidebar-deep: #08080b;
 }
 
 :root[data-theme="light"] {
@@ -149,9 +153,9 @@ body {
    --t-cream acá adentro no alcanza para cambiar lo que ya heredó
    --color-cream de :root. Hay que pisar el nombre final.
 
-   --color-wood-* NO se pisa a propósito — así el sidebar sigue
-   mostrando madera en oscuro e índigo en claro, coherente con el tema
-   elegido, aunque su fondo no cambie. */
+   --color-wood-* NO se pisa a propósito — así el acento del sidebar
+   sigue cambiando con el tema (azul-morado en oscuro, índigo en claro,
+   ver --t-wood-* en :root), aunque su fondo no cambie. */
 .sidebar-scope {
   --color-cream: #f4f0e9;
   --color-cream-muted: #a89f92;
