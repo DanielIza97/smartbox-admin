@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { apiFetch } from '@/lib/api';
-import { Role } from '@/types';
+import { useAuth } from '@/context/AuthContext';
+import { Role, Gym } from '@/types';
 
 interface CreateUserModalProps {
   isOpen: boolean;
@@ -14,9 +15,39 @@ interface CreateUserModalProps {
 }
 
 export function CreateUserModal({ isOpen, onClose, roles, onSuccess }: CreateUserModalProps) {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', role: '' });
+  const { user } = useAuth();
+  const isSuperAdmin = user?.role === 'SUPER_ADMIN';
+
+  const [formData, setFormData] = useState({ name: '', email: '', password: '', role: '', gymId: '' });
+  const [gyms, setGyms] = useState<Gym[]>([]);
+  const [loadingGyms, setLoadingGyms] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState('');
+
+  const selectedRoleName = roles.find((r) => r.id === formData.role)?.name;
+  // SUPER_ADMIN no tiene gymId propio para que el backend lo autocomplete
+  // (a diferencia de ADMIN) — este modal necesita pedirlo a mano cuando el
+  // rol a crear no es SUPER_ADMIN.
+  const needsGymPicker = isSuperAdmin && !!selectedRoleName && selectedRoleName !== 'SUPER_ADMIN';
+
+  useEffect(() => {
+    if (!isOpen || !isSuperAdmin) return;
+
+    const loadGyms = async () => {
+      try {
+        setLoadingGyms(true);
+        const res = await apiFetch('/gyms');
+        const data = res.ok ? await res.json() : [];
+        setGyms(Array.isArray(data) ? data : []);
+      } catch {
+        setGyms([]);
+      } finally {
+        setLoadingGyms(false);
+      }
+    };
+
+    loadGyms();
+  }, [isOpen, isSuperAdmin]);
 
   if (!isOpen) return null;
 
@@ -33,6 +64,7 @@ export function CreateUserModal({ isOpen, onClose, roles, onSuccess }: CreateUse
           email: formData.email,
           password: formData.password,
           roleId: formData.role,
+          gymId: needsGymPicker ? formData.gymId : undefined,
         }),
       });
 
@@ -64,15 +96,34 @@ export function CreateUserModal({ isOpen, onClose, roles, onSuccess }: CreateUse
           <Input label="Nombre" required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
           <Input label="Email" type="email" required value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
           <Input label="Contraseña" type="password" required value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} />
-          
+
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-cream-muted">Rol</label>
-            <select className="w-full pl-4 py-2.5 bg-ink-850 border border-ink-line-strong rounded-xl text-sm" 
-              onChange={(e) => setFormData({...formData, role: e.target.value})} required>
+            <select className="w-full pl-4 py-2.5 bg-ink-850 border border-ink-line-strong rounded-xl text-sm"
+              value={formData.role}
+              onChange={(e) => setFormData({...formData, role: e.target.value, gymId: ''})} required>
               <option value="">Selecciona...</option>
               {roles.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
             </select>
           </div>
+
+          {needsGymPicker && (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-cream-muted">Gimnasio</label>
+              <select
+                className="w-full pl-4 py-2.5 bg-ink-850 border border-ink-line-strong rounded-xl text-sm disabled:opacity-60"
+                value={formData.gymId}
+                onChange={(e) => setFormData({...formData, gymId: e.target.value})}
+                disabled={loadingGyms || gyms.length === 0}
+                required
+              >
+                {loadingGyms && <option value="">Cargando gimnasios...</option>}
+                {!loadingGyms && gyms.length === 0 && <option value="">Sin gimnasios disponibles</option>}
+                {!loadingGyms && gyms.length > 0 && <option value="">Selecciona...</option>}
+                {gyms.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
+              </select>
+            </div>
+          )}
 
           <Button type="submit" isLoading={isCreating} className="w-full">
             {isCreating ? 'Guardando...' : 'Confirmar Registro'}
