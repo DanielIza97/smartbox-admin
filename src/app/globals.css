@@ -55,13 +55,13 @@
 }
 
 :root[data-theme="light"] {
-  --t-ink-950: #f8fafc;
-  --t-ink-900: #f1f5f9;
+  --t-ink-950: #e8edfb;
+  --t-ink-900: #dbe4fa;
   --t-ink-850: #ffffff;
-  --t-ink-800: #f1f5f9;
-  --t-ink-700: #e2e8f0;
-  --t-ink-line: #f1f5f9;
-  --t-ink-line-strong: #e2e8f0;
+  --t-ink-800: #eef1f9;
+  --t-ink-700: #e0e6f5;
+  --t-ink-line: #dde5f7;
+  --t-ink-line-strong: #c7d3f0;
 
   --t-wood-700: #3730a3;
   --t-wood-600: #4f46e5;

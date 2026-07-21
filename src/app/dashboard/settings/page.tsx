@@ -23,7 +23,7 @@ function MercadoPagoStatusBanner() {
   if (mercadoPagoStatus === 'error') {
     return (
       <div className="mb-6 p-4 bg-pop-bg border border-pop/30 text-pop rounded-xl text-sm font-medium">
-        ✕ No se pudo completar la conexión con Mercado Pago. Intentá de nuevo.
+        ✕ No se pudo completar la conexión con Mercado Pago. Intenta de nuevo.
       </div>
     );
   }

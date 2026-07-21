@@ -106,12 +106,12 @@ export default function LoginPage() {
           <div className="text-center pt-2 space-y-1.5">
             <p>
               <Link href="/signup-gym" className="text-xs font-medium text-neon-400 hover:underline">
-                ¿Sos dueño de un gimnasio? Creá tu cuenta
+                ¿Eres dueño de un gimnasio? Crea tu cuenta
               </Link>
             </p>
             <p>
               <Link href="/register" className="text-xs font-medium text-neon-400 hover:underline">
-                ¿Sos socio de un gimnasio? Registrate
+                ¿Eres socio de un gimnasio? Regístrate
               </Link>
             </p>
           </div>

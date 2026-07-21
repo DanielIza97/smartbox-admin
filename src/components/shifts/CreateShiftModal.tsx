@@ -70,7 +70,7 @@ export function CreateShiftModal({ isOpen, staffOptions, onClose, onSuccess }: C
 
         {staffOptions.length === 0 ? (
           <p className="text-sm text-cream-muted">
-            Tu gimnasio todavía no tiene usuarios con rol STAFF. Creá uno desde Usuarios y Roles primero.
+            Tu gimnasio todavía no tiene usuarios con rol STAFF. Crea uno desde Usuarios y Roles primero.
           </p>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -82,7 +82,7 @@ export function CreateShiftModal({ isOpen, staffOptions, onClose, onSuccess }: C
                 required
                 className="w-full px-4 py-2.5 bg-ink-850 border border-ink-line-strong rounded-xl text-cream focus:outline-none focus:ring-2 focus:ring-neon-400/25 focus:border-neon-400 transition-all text-sm"
               >
-                <option value="">Seleccioná...</option>
+                <option value="">Selecciona...</option>
                 {staffOptions.map((s) => (
                   <option key={s.id} value={s.id}>{s.name}</option>
                 ))}

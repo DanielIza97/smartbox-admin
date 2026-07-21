@@ -33,7 +33,7 @@ export function ThemeToggle({ className }: { className?: string }) {
       {theme === 'dark' ? (
         <>☀️ Modo claro</>
       ) : (
-        <>🌲 Modo madero</>
+        <>🌙 Modo oscuro</>
       )}
     </button>
   );

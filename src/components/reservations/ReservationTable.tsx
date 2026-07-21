@@ -125,7 +125,7 @@ export function ReservationTable({ reservations, canCancel, onCancelled }: Reser
       <ConfirmationModal
         isOpen={!!confirmTarget}
         title="Cancelar reserva"
-        message="¿Confirmás que querés cancelar esta reserva?"
+        message="¿Confirmas que quieres cancelar esta reserva?"
         onConfirm={handleCancel}
         onCancel={() => setConfirmTarget(null)}
       />

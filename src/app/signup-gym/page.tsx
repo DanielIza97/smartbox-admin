@@ -52,7 +52,7 @@ export default function SignupGymPage() {
           window.location.href = '/dashboard/settings';
         }, 100);
       } else {
-        setError(data.message || 'No se pudo crear tu gimnasio. Intentá de nuevo.');
+        setError(data.message || 'No se pudo crear tu gimnasio. Intenta de nuevo.');
         setIsLoading(false);
       }
     } catch (err) {
@@ -71,7 +71,7 @@ export default function SignupGymPage() {
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-cream tracking-tight">SmartBox</h1>
           <p className="text-sm text-cream-muted mt-2">
-            Dá de alta tu gimnasio y creá tu cuenta de administrador
+            Da de alta tu gimnasio y crea tu cuenta de administrador
           </p>
         </div>
 
@@ -137,7 +137,7 @@ export default function SignupGymPage() {
 
           <div className="text-center pt-2">
             <Link href="/login" className="text-xs font-medium text-neon-400 hover:underline">
-              ¿Ya tenés cuenta? Iniciá sesión
+              ¿Ya tienes cuenta? Inicia sesión
             </Link>
           </div>
         </form>

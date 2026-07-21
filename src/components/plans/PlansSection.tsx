@@ -54,7 +54,7 @@ export function PlansSection({ gymId, canManage, mercadoPagoConnected }: PlansSe
             </button>
           ) : (
             <p className="text-xs text-cream-faint italic">
-              Conectá Mercado Pago antes de crear planes.
+              Conecta Mercado Pago antes de crear planes.
             </p>
           )}
         </div>

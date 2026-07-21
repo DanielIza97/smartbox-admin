@@ -113,7 +113,7 @@ export function MembershipStatusCard({ membership, plans, onChange }: Membership
       {error && <div className="p-3 bg-pop-bg text-pop rounded-lg text-sm my-4">{error}</div>}
 
       {!membership ? (
-        <p className="text-sm text-cream-muted mb-4">Todavía no tenés una membresía.</p>
+        <p className="text-sm text-cream-muted mb-4">Todavía no tienes una membresía.</p>
       ) : (
         <div className="mt-4 space-y-3 text-sm">
           <div>
@@ -137,8 +137,8 @@ export function MembershipStatusCard({ membership, plans, onChange }: Membership
           )}
           {membership.status === 'past_due' && (
             <p className="text-warn">
-              Tu último cobro fue rechazado. Actualizá tu tarjeta desde tu propia cuenta de
-              Mercado Pago (Débitos automáticos) — no perdés el acceso todavía.
+              Tu último cobro fue rechazado. Actualiza tu tarjeta desde tu propia cuenta de
+              Mercado Pago (Débitos automáticos) — no pierdes el acceso todavía.
             </p>
           )}
         </div>

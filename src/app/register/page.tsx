@@ -110,7 +110,7 @@ export default function RegisterPage() {
 
         {!loadingGyms && gyms.length === 0 && !successMessage && (
           <div className="mb-5 p-3 bg-warn-bg border border-warn/30 text-warn rounded-lg text-sm font-medium">
-            Todavía no hay ningún gimnasio dado de alta en SmartBox — no podés registrarte como socio hasta que exista uno.
+            Todavía no hay ningún gimnasio dado de alta en SmartBox — no puedes registrarte como socio hasta que exista uno.
           </div>
         )}
 
@@ -146,7 +146,7 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-sm font-medium text-cream-muted mb-1.5">
-              Gimnasio al que te unís
+              Gimnasio al que te unes
             </label>
             <select
               required

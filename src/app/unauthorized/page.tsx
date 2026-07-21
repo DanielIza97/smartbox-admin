@@ -20,7 +20,7 @@ export default function UnauthorizedPage() {
         <p className="text-sm text-cream-muted">
           {user?.role
             ? `Tu rol (${user.role}) no tiene permiso para ver esta sección.`
-            : 'No tenés permiso para ver esta sección.'}
+            : 'No tienes permiso para ver esta sección.'}
         </p>
         <Link
           href="/dashboard"
