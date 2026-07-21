@@ -5,9 +5,10 @@ import { Gym } from '@/types';
 
 interface GymTableProps {
   gyms: Gym[];
+  emptyMessage?: string;
 }
 
-export function GymTable({ gyms }: GymTableProps) {
+export function GymTable({ gyms, emptyMessage }: GymTableProps) {
   return (
     <div className="w-full overflow-hidden rounded-xl border border-ink-line-strong shadow-sm bg-ink-850">
       <div className="px-6 py-4 border-b border-ink-line bg-ink-900/50 flex justify-between items-center">
@@ -61,7 +62,7 @@ export function GymTable({ gyms }: GymTableProps) {
             ) : (
               <tr>
                 <td colSpan={6} className="px-6 py-12 text-center text-cream-faint">
-                  No hay gimnasios registrados todavía.
+                  {emptyMessage ?? 'No hay gimnasios registrados todavía.'}
                 </td>
               </tr>
             )}

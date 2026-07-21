@@ -13,9 +13,10 @@ interface ReservationTableProps {
   // en POST /reservations/:id/cancel.
   canCancel: boolean;
   onCancelled: (reservation: Reservation) => void;
+  emptyMessage?: string;
 }
 
-const STATUS_LABEL: Record<Reservation['status'], string> = {
+export const STATUS_LABEL: Record<Reservation['status'], string> = {
   confirmed: 'Confirmada',
   cancelled: 'Cancelada',
   expired: 'Vencida',
@@ -36,7 +37,7 @@ function formatSlot(startAt: string, endAt: string) {
   return `${day}, ${startTime} a ${endTime}`;
 }
 
-export function ReservationTable({ reservations, canCancel, onCancelled }: ReservationTableProps) {
+export function ReservationTable({ reservations, canCancel, onCancelled, emptyMessage }: ReservationTableProps) {
   const [cancellingId, setCancellingId] = useState<string | null>(null);
   const [confirmTarget, setConfirmTarget] = useState<Reservation | null>(null);
   const [error, setError] = useState('');
@@ -114,7 +115,7 @@ export function ReservationTable({ reservations, canCancel, onCancelled }: Reser
             ) : (
               <tr>
                 <td colSpan={canCancel ? 4 : 3} className="px-6 py-12 text-center text-cream-faint">
-                  Todavía no hay reservas.
+                  {emptyMessage ?? 'Todavía no hay reservas.'}
                 </td>
               </tr>
             )}

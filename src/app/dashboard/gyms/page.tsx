@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Sidebar } from '@/components/ui/sidebar';
 import { GymTable } from '@/components/gyms/GymTable';
 import { CreateGymModal } from '@/components/gyms/CreateGymModal';
@@ -11,6 +11,9 @@ export default function GymsPage() {
   const [gyms, setGyms] = useState<Gym[]>([]);
   const [loading, setLoading] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  const [search, setSearch] = useState('');
+  const [mpFilter, setMpFilter] = useState('ALL');
 
   const loadGyms = useCallback(async () => {
     try {
@@ -28,6 +31,28 @@ export default function GymsPage() {
   useEffect(() => {
     loadGyms();
   }, [loadGyms]);
+
+  const filteredGyms = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    return gyms.filter((g) => {
+      const matchesSearch =
+        !term ||
+        g.name.toLowerCase().includes(term) ||
+        (g.address ?? '').toLowerCase().includes(term);
+      const matchesMp =
+        mpFilter === 'ALL' ||
+        (mpFilter === 'CONNECTED' && !!g.mercadoPagoUserId) ||
+        (mpFilter === 'DISCONNECTED' && !g.mercadoPagoUserId);
+      return matchesSearch && matchesMp;
+    });
+  }, [gyms, search, mpFilter]);
+
+  const filtersActive = search.trim() !== '' || mpFilter !== 'ALL';
+
+  const clearFilters = () => {
+    setSearch('');
+    setMpFilter('ALL');
+  };
 
   return (
     <div className="flex min-h-screen bg-ink-950">
@@ -54,7 +79,43 @@ export default function GymsPage() {
               Cargando datos...
             </div>
           ) : (
-            <GymTable gyms={gyms} />
+            <>
+              <div className="flex flex-wrap items-center gap-3 mb-4">
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Buscar por nombre o dirección..."
+                  className="flex-1 min-w-[220px] px-4 py-2.5 bg-ink-850 border border-ink-line-strong rounded-xl text-sm text-cream placeholder:text-cream-faint focus:outline-none focus:ring-2 focus:ring-neon-400/20 focus:border-neon-400 transition-all"
+                />
+
+                <select
+                  value={mpFilter}
+                  onChange={(e) => setMpFilter(e.target.value)}
+                  className="px-4 py-2.5 bg-ink-850 border border-ink-line-strong rounded-xl text-sm text-cream focus:outline-none focus:ring-2 focus:ring-neon-400/20 focus:border-neon-400 transition-all"
+                >
+                  <option value="ALL">Mercado Pago: todos</option>
+                  <option value="CONNECTED">Conectado</option>
+                  <option value="DISCONNECTED">Sin conectar</option>
+                </select>
+
+                {filtersActive && (
+                  <button
+                    onClick={clearFilters}
+                    className="text-xs font-semibold text-cream-muted hover:text-cream transition-colors px-2"
+                  >
+                    Limpiar filtros
+                  </button>
+                )}
+              </div>
+
+              <GymTable
+                gyms={filteredGyms}
+                emptyMessage={
+                  filtersActive ? 'Ningún gimnasio coincide con los filtros aplicados.' : undefined
+                }
+              />
+            </>
           )}
         </div>
       </main>
