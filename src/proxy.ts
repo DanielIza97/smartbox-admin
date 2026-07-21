@@ -8,7 +8,6 @@ export function proxy(req: NextRequest) {
 
   // Permisos por sección del dashboard.
   const rolePermissions: Record<string, string[]> = {
-    '/dashboard/admin': ['SUPER_ADMIN', 'ADMIN'],
     '/dashboard/users': ['SUPER_ADMIN', 'ADMIN'],
     '/dashboard/payments': ['SUPER_ADMIN', 'ADMIN'],
     '/dashboard/logs': ['SUPER_ADMIN'],
