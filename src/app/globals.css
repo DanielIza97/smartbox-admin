@@ -1,9 +1,17 @@
 @import "tailwindcss";
 
-/* Dos temas: "madero" (oscuro, gimnasio boutique industrial — negro
-   mate, acentos de madera, un único acento de neón frío) y "claro" (el
-   esquema slate/indigo que tenía la app antes). El usuario pidió poder
-   elegir, no que uno reemplace al otro — ver ThemeToggle.
+/* Dos temas: "oscuro" (negro mate, acento azul-morado/índigo, un
+   único acento de neón frío) y "claro" (fondo blanco/azul, mismo
+   acento índigo). El usuario pidió poder elegir, no que uno reemplace
+   al otro — ver ThemeToggle.
+
+   El acento --t-wood-* se llamó así cuando el tema oscuro tenía un
+   look "madero" (marrón); el usuario pidió sacar el marrón y usar
+   azul-morado en su lugar (2026-07-21) — se cambiaron los valores,
+   no el nombre de la variable, para no tener que tocar cada clase
+   `bg-wood-*`/`text-wood-*`/`border-wood-*` del código. Si volvés a
+   tocar esto, "wood" ya no describe el color real, es solo el nombre
+   histórico del token de acento estructural.
 
    Cada token de color se define dos veces como variable CRUDA (--t-*):
    una vez en :root (oscuro, default) y una vez bajo
@@ -20,10 +28,10 @@
   --t-ink-line: #f4f0e914;
   --t-ink-line-strong: #f4f0e924;
 
-  --t-wood-700: #8a5c3a;
-  --t-wood-600: #a8734a;
-  --t-wood-500: #c08f5f;
-  --t-wood-400: #d9b28c;
+  --t-wood-700: #4338ca;
+  --t-wood-600: #6366f1;
+  --t-wood-500: #818cf8;
+  --t-wood-400: #a5b4fc;
 
   --t-neon-500: #4fd1e0;
   --t-neon-400: #7fe3f0;
