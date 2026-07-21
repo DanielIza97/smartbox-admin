@@ -26,13 +26,13 @@ export function CreateUserModal({ isOpen, onClose, roles, onSuccess }: CreateUse
     setError('');
 
     try {
-      const res = await apiFetch('/auth/register-internal', {
+      const res = await apiFetch('/users', {
         method: 'POST',
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
           password: formData.password,
-          roleName: formData.role,
+          roleId: formData.role,
         }),
       });
 
@@ -70,7 +70,7 @@ export function CreateUserModal({ isOpen, onClose, roles, onSuccess }: CreateUse
             <select className="w-full pl-4 py-2.5 bg-ink-850 border border-ink-line-strong rounded-xl text-sm" 
               onChange={(e) => setFormData({...formData, role: e.target.value})} required>
               <option value="">Selecciona...</option>
-              {roles.map(r => <option key={r.id} value={r.name}>{r.name}</option>)}
+              {roles.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
             </select>
           </div>
 
