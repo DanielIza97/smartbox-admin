@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { Sidebar } from '@/components/ui/sidebar';
 import { UserTable } from '@/components/admin/UserTable';
 import { CreateUserModal } from '@/components/admin/CreateUserModal';
@@ -11,11 +11,50 @@ import { User, Role } from '@/types';
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
-  const [loading, setLoading] = useState(false); 
-  
+  const [loading, setLoading] = useState(false);
+
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [userToEdit, setUserToEdit] = useState<User | null>(null);
+
+  const [search, setSearch] = useState('');
+  const [roleFilter, setRoleFilter] = useState('ALL');
+  const [gymFilter, setGymFilter] = useState('ALL');
+
+  // Gimnasios distintos presentes en la lista ya cargada — para ADMIN/STAFF
+  // (que solo ven su propio gym) esto da como mucho 1 opción, así que el
+  // selector de gimnasio se oculta solo (ver más abajo); para SUPER_ADMIN,
+  // que ve todos los gimnasios mezclados, refleja los que realmente
+  // aparecen en la tabla.
+  const gymOptions = useMemo(() => {
+    const map = new Map<string, string>();
+    users.forEach((u) => {
+      if (u.gym) map.set(u.gym.id, u.gym.name);
+    });
+    return Array.from(map.entries())
+      .map(([id, name]) => ({ id, name }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [users]);
+
+  const filteredUsers = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    return users.filter((u) => {
+      const matchesSearch =
+        !term || u.name.toLowerCase().includes(term) || u.email.toLowerCase().includes(term);
+      const roleName = typeof u.role === 'object' && u.role !== null ? u.role.name : u.role;
+      const matchesRole = roleFilter === 'ALL' || roleName === roleFilter;
+      const matchesGym = gymFilter === 'ALL' || u.gym?.id === gymFilter;
+      return matchesSearch && matchesRole && matchesGym;
+    });
+  }, [users, search, roleFilter, gymFilter]);
+
+  const filtersActive = search.trim() !== '' || roleFilter !== 'ALL' || gymFilter !== 'ALL';
+
+  const clearFilters = () => {
+    setSearch('');
+    setRoleFilter('ALL');
+    setGymFilter('ALL');
+  };
 
   const loadData = useCallback(async () => {
     try {
@@ -66,14 +105,64 @@ export default function UsersPage() {
               Cargando datos...
             </div>
           ) : (
-            <UserTable
-              users={users}
-              onDelete={loadData}
-              onEdit={(user) => {
-                setUserToEdit(user);
-                setIsEditModalOpen(true);
-              }}
-            />
+            <>
+              <div className="flex flex-wrap items-center gap-3 mb-4">
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Buscar por nombre o email..."
+                  className="flex-1 min-w-[220px] px-4 py-2.5 bg-ink-850 border border-ink-line-strong rounded-xl text-sm text-cream placeholder:text-cream-faint focus:outline-none focus:ring-2 focus:ring-neon-400/20 focus:border-neon-400 transition-all"
+                />
+
+                <select
+                  value={roleFilter}
+                  onChange={(e) => setRoleFilter(e.target.value)}
+                  className="px-4 py-2.5 bg-ink-850 border border-ink-line-strong rounded-xl text-sm text-cream focus:outline-none focus:ring-2 focus:ring-neon-400/20 focus:border-neon-400 transition-all"
+                >
+                  <option value="ALL">Todos los roles</option>
+                  {roles.map((r) => (
+                    <option key={r.id} value={r.name}>{r.name}</option>
+                  ))}
+                </select>
+
+                {gymOptions.length > 1 && (
+                  <select
+                    value={gymFilter}
+                    onChange={(e) => setGymFilter(e.target.value)}
+                    className="px-4 py-2.5 bg-ink-850 border border-ink-line-strong rounded-xl text-sm text-cream focus:outline-none focus:ring-2 focus:ring-neon-400/20 focus:border-neon-400 transition-all"
+                  >
+                    <option value="ALL">Todos los gimnasios</option>
+                    {gymOptions.map((g) => (
+                      <option key={g.id} value={g.id}>{g.name}</option>
+                    ))}
+                  </select>
+                )}
+
+                {filtersActive && (
+                  <button
+                    onClick={clearFilters}
+                    className="text-xs font-semibold text-cream-muted hover:text-cream transition-colors px-2"
+                  >
+                    Limpiar filtros
+                  </button>
+                )}
+              </div>
+
+              <UserTable
+                users={filteredUsers}
+                emptyMessage={
+                  filtersActive
+                    ? 'Ningún usuario coincide con los filtros aplicados.'
+                    : undefined
+                }
+                onDelete={loadData}
+                onEdit={(user) => {
+                  setUserToEdit(user);
+                  setIsEditModalOpen(true);
+                }}
+              />
+            </>
           )}
         </div>
       </main>

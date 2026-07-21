@@ -32,9 +32,10 @@ interface UserTableProps {
   users: User[];
   onDelete: () => void;
   onEdit: (user: User) => void;
+  emptyMessage?: string;
 }
 
-export function UserTable({ users, onDelete, onEdit }: UserTableProps) {
+export function UserTable({ users, onDelete, onEdit, emptyMessage }: UserTableProps) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
 
@@ -105,7 +106,7 @@ export function UserTable({ users, onDelete, onEdit }: UserTableProps) {
               ) : (
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center text-cream-faint">
-                    No hay usuarios registrados en el sistema.
+                    {emptyMessage ?? 'No hay usuarios registrados en el sistema.'}
                   </td>
                 </tr>
               )}
