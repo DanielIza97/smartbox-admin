@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,6 +51,10 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <AuthProvider>
           {children}
+          {/* Único lugar donde se renderiza — mismo sitio (fixed top-5
+              right-5) en todas las pantallas, en vez de repetirlo (y
+              desalinearlo) en cada página/layout. Ver ThemeToggle. */}
+          <ThemeToggle className="fixed top-5 right-5 z-50 text-xs font-semibold text-cream-muted hover:text-cream bg-ink-850 border border-ink-line-strong rounded-full px-3 py-1.5 shadow-sm transition-colors" />
         </AuthProvider>
       </body>
     </html>

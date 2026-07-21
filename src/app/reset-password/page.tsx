@@ -6,7 +6,6 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { apiFetch } from '@/lib/api';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 function ResetPasswordForm() {
   const searchParams = useSearchParams();
@@ -63,10 +62,7 @@ function ResetPasswordForm() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-ink-950 px-4 relative">
-      <div className="absolute top-5 right-5">
-        <ThemeToggle className="text-xs font-semibold text-cream-muted hover:text-cream border border-ink-line-strong rounded-full px-3 py-1.5 transition-colors" />
-      </div>
+    <div className="flex min-h-screen items-center justify-center bg-ink-950 px-4">
       <div className="w-full max-w-md bg-ink-850 p-8 rounded-2xl shadow-sm border border-ink-line">
         <div className="text-center mb-6">
           <h2 className="text-3xl font-bold text-cream tracking-tight mb-2">

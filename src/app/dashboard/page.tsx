@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Sidebar } from '../../components/ui/sidebar';
 import { useAuth } from '@/context/AuthContext';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -54,14 +53,11 @@ export default function Dashboard() {
               </p>
             </div>
             
-            <div className="flex items-center gap-4">
-              <ThemeToggle className="text-xs font-semibold text-cream-muted hover:text-cream border border-ink-line-strong rounded-full px-3 py-1.5 transition-colors" />
-              <div className="flex items-center gap-3 border-l border-ink-line pl-4">
-                <span className="w-2.5 h-2.5 bg-success rounded-full animate-pulse"></span>
-                <span className="text-xs font-bold text-neon-300 bg-ink-800 border border-wood-600/40 px-3 py-1.5 rounded-full uppercase tracking-wider">
-                  {user?.role || 'SIN ROL'}
-                </span>
-              </div>
+            <div className="flex items-center gap-3">
+              <span className="w-2.5 h-2.5 bg-success rounded-full animate-pulse"></span>
+              <span className="text-xs font-bold text-neon-300 bg-ink-800 border border-wood-600/40 px-3 py-1.5 rounded-full uppercase tracking-wider">
+                {user?.role || 'SIN ROL'}
+              </span>
             </div>
           </header>
 

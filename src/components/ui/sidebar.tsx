@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { LogoutButton } from './LogoutButton';
-import { ThemeToggle } from './ThemeToggle';
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -66,8 +65,6 @@ export function Sidebar() {
 
       {/* SECCIÓN DE USUARIO: Perfil y Logout */}
       <div className="border-t border-ink-line pt-3 space-y-1">
-        <ThemeToggle className="w-full flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold text-cream-muted hover:bg-ink-line hover:text-cream transition-all border-l-2 border-transparent" />
-
         <Link
           href="/dashboard/profile"
           className={`w-full flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold border-l-2 transition-all ${

@@ -20,11 +20,11 @@
    un valor fijo — así una sola clase de Tailwind (bg-ink-850, etc.)
    sirve para los dos temas sin tocar ningún componente. */
 :root {
-  --t-ink-950: #121110;
-  --t-ink-900: #17110c;
-  --t-ink-850: #1a1816;
-  --t-ink-800: #201d1a;
-  --t-ink-700: #2a2521;
+  --t-ink-950: #0b0a0c;
+  --t-ink-900: #121016;
+  --t-ink-850: #1f1c24;
+  --t-ink-800: #29262f;
+  --t-ink-700: #37333d;
   --t-ink-line: #f4f0e914;
   --t-ink-line-strong: #f4f0e924;
 
