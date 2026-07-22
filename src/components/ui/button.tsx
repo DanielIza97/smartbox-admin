@@ -15,7 +15,7 @@ export function Button({
   const baseStyles = "w-full mt-2 py-3 px-4 font-medium rounded-xl transition-all text-sm shadow-sm flex items-center justify-center disabled:opacity-70";
   
   const variantStyles = {
-    primary: "bg-wood-600 hover:bg-wood-500 text-cream disabled:bg-wood-700",
+    primary: "bg-gradient-to-r from-wood-600 to-neon-500 hover:from-wood-500 hover:to-neon-400 text-white shadow-lg shadow-wood-600/30 disabled:from-wood-700 disabled:to-wood-700",
     ghost: "bg-transparent text-cream-muted hover:bg-ink-line border border-ink-line-strong",
     secondary: "bg-ink-800 text-cream hover:bg-ink-700 disabled:bg-ink-850 border border-ink-line"
   };

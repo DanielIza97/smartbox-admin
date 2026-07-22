@@ -71,10 +71,10 @@ export function Sidebar() {
               <Link
                 key={item.path}
                 href={item.path}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold transition-all border-l-2 ${
+                className={`w-full flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold rounded-xl transition-all ${
                   isActive
-                    ? 'bg-ink-line text-cream border-wood-500'
-                    : 'text-cream-muted border-transparent hover:bg-ink-line hover:text-cream'
+                    ? 'bg-gradient-to-r from-wood-600 to-neon-500 text-white shadow-md shadow-wood-600/30'
+                    : 'text-cream-muted hover:bg-ink-line hover:text-cream'
                 }`}
               >
                 <span className="text-base">{item.icon}</span>
@@ -89,15 +89,17 @@ export function Sidebar() {
       <div className="border-t border-ink-line pt-3 space-y-1">
         <Link
           href="/dashboard/profile"
-          className={`w-full flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold border-l-2 transition-all ${
-            pathname === '/dashboard/profile' ? 'bg-ink-line text-cream border-wood-500' : 'text-cream-muted border-transparent hover:bg-ink-line hover:text-cream'
+          className={`w-full flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold rounded-xl transition-all ${
+            pathname === '/dashboard/profile'
+              ? 'bg-gradient-to-r from-wood-600 to-neon-500 text-white shadow-md shadow-wood-600/30'
+              : 'text-cream-muted hover:bg-ink-line hover:text-cream'
           }`}
         >
           <span>👤</span> Mi Perfil
         </Link>
 
         <LogoutButton
-          className="w-full flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold text-pop hover:bg-pop-bg transition-colors border-l-2 border-transparent"
+          className="w-full flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold text-pop hover:bg-pop-bg transition-colors rounded-xl"
         />
 
         <div className="flex items-center gap-2 px-3 pt-3 text-[11.5px] text-cream-muted">

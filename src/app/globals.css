@@ -20,26 +20,34 @@
    un valor fijo — así una sola clase de Tailwind (bg-ink-850, etc.)
    sirve para los dos temas sin tocar ningún componente. */
 :root {
-  --t-ink-950: #24262b;
-  --t-ink-900: #2c2e34;
-  --t-ink-850: #383a42;
-  --t-ink-800: #45474f;
-  --t-ink-700: #565961;
-  --t-ink-line: #f4f0e91f;
-  --t-ink-line-strong: #f4f0e930;
+  /* 2026-07-22: el usuario adjuntó una referencia real (dashboard
+     "Lumaora", morado profundo casi negro + acento violeta/magenta) y
+     pidió reemplazar por completo el modo oscuro anterior (gris
+     plateado) por esta paleta, en toda la app — no solo login. Rampa
+     de fondo con tinte violeta (en vez de neutro), acento --t-wood-*
+     movido a violeta vívido (antes azul-índigo) y --t-neon-* movido a
+     magenta/fucsia (antes cian) para el segundo acento tipo "pop" que
+     tiene la referencia. El tema claro no se tocó. */
+  --t-ink-950: #0d0a17;
+  --t-ink-900: #150f22;
+  --t-ink-850: #1c1530;
+  --t-ink-800: #241c3d;
+  --t-ink-700: #33254f;
+  --t-ink-line: #c4b5fd1f;
+  --t-ink-line-strong: #c4b5fd30;
 
-  --t-wood-700: #4338ca;
-  --t-wood-600: #6366f1;
-  --t-wood-500: #818cf8;
-  --t-wood-400: #a5b4fc;
+  --t-wood-700: #6d28d9;
+  --t-wood-600: #7c3aed;
+  --t-wood-500: #8b5cf6;
+  --t-wood-400: #a78bfa;
 
-  --t-neon-500: #4fd1e0;
-  --t-neon-400: #7fe3f0;
-  --t-neon-300: #a9edf5;
+  --t-neon-500: #d946ef;
+  --t-neon-400: #e879f9;
+  --t-neon-300: #f0abfc;
 
-  --t-cream: #f4f0e9;
-  --t-cream-muted: #a89f92;
-  --t-cream-faint: #6f665b;
+  --t-cream: #f5f3ff;
+  --t-cream-muted: #b8b0d9;
+  --t-cream-faint: #7c7396;
 
   --t-success: #9fd48a;
   --t-success-bg: #9fd48a1f;
@@ -50,20 +58,19 @@
 
   /* Casos puntuales que se usan como inline style (fuera de las clases
      de Tailwind) y necesitan su propio par claro/oscuro. */
-  --t-nav-glass: rgba(36, 38, 43, 0.82);
-  --t-neon-glow: rgba(127, 227, 240, 0.35);
+  --t-nav-glass: rgba(21, 15, 34, 0.82);
+  --t-neon-glow: rgba(217, 70, 239, 0.35);
 
   /* El sidebar de /dashboard es oscuro EN LOS DOS TEMAS a propósito —
      así se veía la app original ("modo claro" = contenido claro, pero
      el sidebar siempre fue oscuro, nunca hubo una versión clara de
      él). Por eso estas dos variables NO se redefinen bajo
-     :root[data-theme="light"] — se quedan fijas siempre.
-     2026-07-21: el usuario pidió "un plateado" — el modo oscuro pasó
-     de negro mate (#0b0a0c) a un gris plateado más claro, aplicado a
-     todo el tema (--t-ink-*) y acá también, para que el sidebar quede
-     en la misma familia en vez de un negro más oscuro que el resto. */
-  --t-sidebar-top: #2c2e34;
-  --t-sidebar-deep: #1c1e22;
+     :root[data-theme="light"] — se quedan fijas siempre. Actualizadas
+     junto con el resto de la rampa --t-ink-* de arriba (2026-07-22),
+     mismo criterio que el fix de "plateado" anterior: quedan en la
+     misma familia morada en vez de un tono aparte. */
+  --t-sidebar-top: #1c1530;
+  --t-sidebar-deep: #08050d;
 }
 
 :root[data-theme="light"] {
@@ -157,11 +164,11 @@ body {
    sigue cambiando con el tema (azul-morado en oscuro, índigo en claro,
    ver --t-wood-* en :root), aunque su fondo no cambie. */
 .sidebar-scope {
-  --color-cream: #f4f0e9;
-  --color-cream-muted: #a89f92;
-  --color-cream-faint: #6f665b;
-  --color-ink-line: #f4f0e914;
-  --color-ink-line-strong: #f4f0e924;
+  --color-cream: #f5f3ff;
+  --color-cream-muted: #b8b0d9;
+  --color-cream-faint: #7c7396;
+  --color-ink-line: #c4b5fd14;
+  --color-ink-line-strong: #c4b5fd24;
   --color-pop: #e5533a;
   --color-pop-bg: #e5533a24;
 }
