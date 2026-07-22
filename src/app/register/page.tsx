@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { apiFetch } from '../../lib/api';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
+import { AuthHeroLayout } from '../../components/auth/AuthHeroLayout';
 
 interface PublicGym {
   id: string;
@@ -78,107 +79,93 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-ink-950 px-4 py-8">
-      <div className="max-w-md w-full bg-ink-850 p-8 rounded-2xl shadow-sm border border-ink-line">
+    <AuthHeroLayout
+      eyebrow="Únete como socio"
+      title="Reserva tus clases en segundos"
+      description="Elegí el gimnasio al que pertenecés y accedé a tus reservas, membresía y facturas desde un solo lugar."
+    >
+      {error && (
+        <div className="mb-5 p-3 bg-pop-bg border border-pop/30 text-pop rounded-lg text-sm font-medium">
+          {error}
+        </div>
+      )}
 
-        {/* Encabezado / Logo */}
-        <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-cream tracking-tight">
-            SmartBox
-          </h1>
-          <p className="text-sm text-cream-muted mt-2">
-            Crea una nueva cuenta en la plataforma
-          </p>
+      {successMessage && (
+        <div className="mb-5 p-3 bg-success-bg border border-success/30 text-success rounded-lg text-sm font-medium">
+          {successMessage}
+        </div>
+      )}
+
+      {!loadingGyms && gyms.length === 0 && !successMessage && (
+        <div className="mb-5 p-3 bg-warn-bg border border-warn/30 text-warn rounded-lg text-sm font-medium">
+          Todavía no hay ningún gimnasio dado de alta en SmartBox — no puedes registrarte como socio hasta que exista uno.
+        </div>
+      )}
+
+      <form onSubmit={handleRegister} className="space-y-4">
+        <Input
+          label="Nombre Completo"
+          type="text"
+          required
+          placeholder="Juan Pérez"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+
+        <Input
+          label="Correo Electrónico"
+          type="email"
+          required
+          placeholder="tu@email.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <Input
+          label="Contraseña"
+          type="password"
+          required
+          minLength={6}
+          placeholder="••••••••"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <div>
+          <label className="block text-sm font-medium text-cream-muted mb-1.5">
+            Gimnasio al que te unes
+          </label>
+          <select
+            required
+            disabled={loadingGyms || gyms.length === 0}
+            value={gymId}
+            onChange={(e) => setGymId(e.target.value)}
+            className="w-full px-4 py-2.5 bg-ink-800 border border-ink-line-strong rounded-xl text-cream focus:outline-none focus:ring-2 focus:ring-neon-400/20 focus:border-neon-400 transition-all text-sm disabled:opacity-60"
+          >
+            {loadingGyms && <option value="">Cargando gimnasios...</option>}
+            {!loadingGyms && gyms.length === 0 && <option value="">Sin gimnasios disponibles</option>}
+            {gyms.map((gym) => (
+              <option key={gym.id} value={gym.id}>{gym.name}</option>
+            ))}
+          </select>
         </div>
 
-        {/* Alertas Visuales */}
-        {error && (
-          <div className="mb-5 p-3 bg-pop-bg border border-pop/30 text-pop rounded-lg text-sm font-medium">
-            {error}
-          </div>
-        )}
+        <Button type="submit" isLoading={isLoading} disabled={gyms.length === 0}>
+          {isLoading ? 'Registrando cuenta...' : 'Registrarse'}
+        </Button>
 
-        {successMessage && (
-          <div className="mb-5 p-3 bg-success-bg border border-success/30 text-success rounded-lg text-sm font-medium">
-            {successMessage}
-          </div>
-        )}
-
-        {!loadingGyms && gyms.length === 0 && !successMessage && (
-          <div className="mb-5 p-3 bg-warn-bg border border-warn/30 text-warn rounded-lg text-sm font-medium">
-            Todavía no hay ningún gimnasio dado de alta en SmartBox — no puedes registrarte como socio hasta que exista uno.
-          </div>
-        )}
-
-        {/* Formulario Reutilizando tus componentes */}
-        <form onSubmit={handleRegister} className="space-y-4">
-          <Input
-            label="Nombre Completo"
-            type="text"
-            required
-            placeholder="Juan Pérez"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-
-          <Input
-            label="Correo Electrónico"
-            type="email"
-            required
-            placeholder="tu@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-
-          <Input
-            label="Contraseña"
-            type="password"
-            required
-            minLength={6}
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-
-          <div>
-            <label className="block text-sm font-medium text-cream-muted mb-1.5">
-              Gimnasio al que te unes
-            </label>
-            <select
-              required
-              disabled={loadingGyms || gyms.length === 0}
-              value={gymId}
-              onChange={(e) => setGymId(e.target.value)}
-              className="w-full px-4 py-2.5 bg-ink-800 border border-ink-line-strong rounded-xl text-cream focus:outline-none focus:ring-2 focus:ring-neon-400/20 focus:border-neon-400 transition-all text-sm disabled:opacity-60"
+        <div className="text-center pt-2">
+          <p className="text-xs text-cream-muted">
+            ¿Ya tienes una cuenta?{' '}
+            <Link
+              href="/login"
+              className="font-semibold text-neon-400 hover:text-neon-300 hover:underline transition-colors"
             >
-              {loadingGyms && <option value="">Cargando gimnasios...</option>}
-              {!loadingGyms && gyms.length === 0 && <option value="">Sin gimnasios disponibles</option>}
-              {gyms.map((gym) => (
-                <option key={gym.id} value={gym.id}>{gym.name}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Tu Button con control de carga e hijos dinámicos */}
-          <Button type="submit" isLoading={isLoading} disabled={gyms.length === 0}>
-            {isLoading ? 'Registrando cuenta...' : 'Registrarse'}
-          </Button>
-
-          {/* Enlace para volver al Login */}
-          <div className="text-center pt-2">
-            <p className="text-xs text-cream-muted">
-              ¿Ya tienes una cuenta?{' '}
-              <Link
-                href="/login"
-                className="font-semibold text-neon-400 hover:text-neon-300 hover:underline transition-colors"
-              >
-                Inicia sesión aquí
-              </Link>
-            </p>
-          </div>
-        </form>
-
-      </div>
-    </div>
+              Inicia sesión aquí
+            </Link>
+          </p>
+        </div>
+      </form>
+    </AuthHeroLayout>
   );
 }
