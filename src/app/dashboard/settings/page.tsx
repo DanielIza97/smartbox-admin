@@ -1,34 +1,12 @@
 'use client';
 
-import { Suspense, useCallback, useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 import { Sidebar } from '@/components/ui/sidebar';
 import { MercadoPagoConnectionCard } from '@/components/gyms/MercadoPagoConnectionCard';
 import { PlansSection } from '@/components/plans/PlansSection';
 import { apiFetch } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { Gym } from '@/types';
-
-function MercadoPagoStatusBanner() {
-  const searchParams = useSearchParams();
-  const mercadoPagoStatus = searchParams.get('mercadopago');
-
-  if (mercadoPagoStatus === 'connected') {
-    return (
-      <div className="mb-6 p-4 bg-success-bg border border-success/30 text-success rounded-xl text-sm font-medium">
-        ✓ Cuenta de Mercado Pago conectada correctamente.
-      </div>
-    );
-  }
-  if (mercadoPagoStatus === 'error') {
-    return (
-      <div className="mb-6 p-4 bg-pop-bg border border-pop/30 text-pop rounded-xl text-sm font-medium">
-        ✕ No se pudo completar la conexión con Mercado Pago. Intenta de nuevo.
-      </div>
-    );
-  }
-  return null;
-}
 
 export default function SettingsPage() {
   const { user } = useAuth();
@@ -66,10 +44,6 @@ export default function SettingsPage() {
             <h1 className="text-2xl font-bold text-cream">Configuración del gimnasio</h1>
             <p className="text-cream-muted text-sm">Datos y conexión de pagos de tu propio gimnasio.</p>
           </div>
-
-          <Suspense fallback={null}>
-            <MercadoPagoStatusBanner />
-          </Suspense>
 
           {loading ? (
             <div className="flex items-center justify-center py-20 text-cream-muted">
