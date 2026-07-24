@@ -32,6 +32,8 @@ export function ClassDetailContent({ classId, classesHref, reservationsHref }: C
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [reservingSlot, setReservingSlot] = useState<string | null>(null);
+  const [joiningWaitlistSlot, setJoiningWaitlistSlot] = useState<string | null>(null);
+  const [joinedWaitlist, setJoinedWaitlist] = useState<Set<string>>(new Set());
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const loadData = useCallback(async () => {
@@ -79,6 +81,31 @@ export function ClassDetailContent({ classId, classesHref, reservationsHref }: C
       setMessage({ type: 'error', text: 'Error de conexión.' });
     } finally {
       setReservingSlot(null);
+    }
+  };
+
+  // Lista de espera (Fase 1) — solo aplica cuando el turno está lleno; si
+  // hay cupo, WaitlistService.join lo rechaza explícitamente y le pide al
+  // socio reservar directo, así que el botón ni se ofrece en ese caso.
+  const handleJoinWaitlist = async (slot: AvailabilitySlot) => {
+    setJoiningWaitlistSlot(slot.startAt);
+    setMessage(null);
+    try {
+      const res = await apiFetch('/waitlist', {
+        method: 'POST',
+        body: JSON.stringify({ classId, startAt: slot.startAt }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setMessage({ type: 'success', text: 'Te anotamos en la lista de espera.' });
+        setJoinedWaitlist((prev) => new Set(prev).add(slot.startAt));
+      } else {
+        setMessage({ type: 'error', text: data.message || 'No se pudo anotar en la lista de espera.' });
+      }
+    } catch {
+      setMessage({ type: 'error', text: 'Error de conexión.' });
+    } finally {
+      setJoiningWaitlistSlot(null);
     }
   };
 
@@ -141,17 +168,28 @@ export function ClassDetailContent({ classId, classesHref, reservationsHref }: C
                         {slot.available} de {slot.capacity} cupos disponibles
                       </p>
                     </div>
-                    {user?.role === 'CLIENT' && (
+                    {user?.role === 'CLIENT' && slot.available > 0 && (
                       <button
                         onClick={() => handleReserve(slot)}
-                        disabled={slot.available === 0 || reservingSlot === slot.startAt}
+                        disabled={reservingSlot === slot.startAt}
                         className="bg-wood-600 hover:bg-wood-500 disabled:opacity-50 disabled:cursor-not-allowed text-cream font-semibold px-4 py-2 rounded-xl shadow-sm transition-all text-xs"
                       >
-                        {reservingSlot === slot.startAt
-                          ? 'Reservando...'
-                          : slot.available === 0
-                            ? 'Sin cupo'
-                            : 'Reservar'}
+                        {reservingSlot === slot.startAt ? 'Reservando...' : 'Reservar'}
+                      </button>
+                    )}
+                    {user?.role === 'CLIENT' && slot.available === 0 && (
+                      <button
+                        onClick={() => handleJoinWaitlist(slot)}
+                        disabled={
+                          joiningWaitlistSlot === slot.startAt || joinedWaitlist.has(slot.startAt)
+                        }
+                        className="bg-ink-800 hover:bg-ink-700 border border-ink-line-strong disabled:opacity-60 disabled:cursor-not-allowed text-cream font-semibold px-4 py-2 rounded-xl shadow-sm transition-all text-xs"
+                      >
+                        {joinedWaitlist.has(slot.startAt)
+                          ? 'Anotado en lista de espera'
+                          : joiningWaitlistSlot === slot.startAt
+                            ? 'Anotando...'
+                            : 'Anotarme en lista de espera'}
                       </button>
                     )}
                   </div>

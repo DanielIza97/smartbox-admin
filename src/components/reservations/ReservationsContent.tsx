@@ -3,8 +3,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ReservationTable, STATUS_LABEL } from './ReservationTable';
+import { MyWaitlistSection } from './MyWaitlistSection';
 import { apiFetch } from '@/lib/api';
-import { Reservation } from '@/types';
+import { useAuth } from '@/context/AuthContext';
+import { CheckIn, Reservation } from '@/types';
 
 interface ReservationsContentProps {
   title?: string;
@@ -26,7 +28,11 @@ export function ReservationsContent({
   newReservationHref,
   hideHeader = false,
 }: ReservationsContentProps) {
+  const { user } = useAuth();
+  const isClient = user?.role === 'CLIENT';
+
   const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [activeCheckIns, setActiveCheckIns] = useState<Record<string, CheckIn>>({});
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState('');
@@ -37,14 +43,29 @@ export function ReservationsContent({
   const loadReservations = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await apiFetch('/reservations');
-      setReservations(res.ok ? await res.json() : []);
+      const requests: Promise<Response>[] = [apiFetch('/reservations')];
+      if (isClient) {
+        requests.push(apiFetch('/checkins'));
+      }
+      const [reservationsRes, checkInsRes] = await Promise.all(requests);
+      setReservations(reservationsRes.ok ? await reservationsRes.json() : []);
+
+      if (checkInsRes) {
+        const checkIns: CheckIn[] = checkInsRes.ok ? await checkInsRes.json() : [];
+        const active: Record<string, CheckIn> = {};
+        for (const checkIn of checkIns) {
+          if (checkIn.reservationId && !checkIn.checkedOutAt) {
+            active[checkIn.reservationId] = checkIn;
+          }
+        }
+        setActiveCheckIns(active);
+      }
     } catch (error) {
       console.error('Error al cargar las reservas:', error);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isClient]);
 
   useEffect(() => {
     loadReservations();
@@ -145,6 +166,8 @@ export function ReservationsContent({
             )}
           </div>
 
+          {isClient && <MyWaitlistSection />}
+
           <ReservationTable
             reservations={filteredReservations}
             canCancel={canCancel}
@@ -153,6 +176,19 @@ export function ReservationsContent({
             }
             onCancelled={(updated) =>
               setReservations((prev) => prev.map((r) => (r.id === updated.id ? updated : r)))
+            }
+            showCheckIn={isClient}
+            activeCheckIns={activeCheckIns}
+            onCheckInChange={(reservationId, checkIn) =>
+              setActiveCheckIns((prev) => {
+                const next = { ...prev };
+                if (checkIn && !checkIn.checkedOutAt) {
+                  next[reservationId] = checkIn;
+                } else {
+                  delete next[reservationId];
+                }
+                return next;
+              })
             }
           />
         </>

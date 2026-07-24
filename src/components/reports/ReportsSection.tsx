@@ -3,8 +3,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { OccupancyReportCard } from './OccupancyReportCard';
 import { RevenueReportCard } from './RevenueReportCard';
+import { FinanceReportCard } from './FinanceReportCard';
 import { apiFetch } from '@/lib/api';
-import { OccupancyReport, RevenueReport } from '@/types';
+import { FinanceReport, OccupancyReport, RevenueReport } from '@/types';
 
 interface ReportsSectionProps {
   gymId: string;
@@ -18,6 +19,7 @@ export function ReportsSection({ gymId, canViewRevenue }: ReportsSectionProps) {
   const [to, setTo] = useState('');
   const [occupancy, setOccupancy] = useState<OccupancyReport | null>(null);
   const [revenue, setRevenue] = useState<RevenueReport | null>(null);
+  const [finance, setFinance] = useState<FinanceReport | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Sin from/to, el backend usa su propio default (últimos 7 días) — no
@@ -32,11 +34,13 @@ export function ReportsSection({ gymId, canViewRevenue }: ReportsSectionProps) {
       const requests = [apiFetch(`/reports/occupancy?${params.toString()}`)];
       if (canViewRevenue) {
         requests.push(apiFetch(`/reports/revenue?${params.toString()}`));
+        requests.push(apiFetch(`/reports/finance?${params.toString()}`));
       }
-      const [occupancyRes, revenueRes] = await Promise.all(requests);
+      const [occupancyRes, revenueRes, financeRes] = await Promise.all(requests);
 
       setOccupancy(occupancyRes.ok ? await occupancyRes.json() : null);
       setRevenue(revenueRes && revenueRes.ok ? await revenueRes.json() : null);
+      setFinance(financeRes && financeRes.ok ? await financeRes.json() : null);
     } catch (error) {
       console.error('Error al cargar los reportes:', error);
     } finally {
@@ -89,7 +93,12 @@ export function ReportsSection({ gymId, canViewRevenue }: ReportsSectionProps) {
       ) : (
         <div className={canViewRevenue ? 'grid grid-cols-1 lg:grid-cols-2 gap-4 items-start' : ''}>
           <OccupancyReportCard report={occupancy} />
-          {canViewRevenue && <RevenueReportCard report={revenue} />}
+          {canViewRevenue && (
+            <div className="space-y-4">
+              <RevenueReportCard report={revenue} />
+              <FinanceReportCard report={finance} />
+            </div>
+          )}
         </div>
       )}
     </div>

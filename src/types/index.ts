@@ -161,3 +161,37 @@ export interface RevenueReport {
   totalCents: number;
   activeMembersCount: number;
 }
+
+// MRR/ARR/Churn/LTV — Fase 1 del roadmap post-v1.5. ltvCents es null si
+// churnRate es 0 (sin churn no hay LTV finito que calcular).
+export interface FinanceReport {
+  from: string;
+  to: string;
+  mrrCents: number;
+  arrCents: number;
+  activeMembersCount: number;
+  cancelledInRangeCount: number;
+  churnRate: number;
+  ltvCents: number | null;
+}
+
+// Check-in físico (Fase 1), evento separado de Reservation.
+export interface CheckIn {
+  id: string;
+  userId: string;
+  gymId: string;
+  reservationId?: string | null;
+  checkedInAt: string;
+  checkedOutAt?: string | null;
+}
+
+// Lista de espera de clases (Fase 1). Sin status — se borra al promoverse
+// o al salir de la lista, mismo criterio minimalista que Reservation.
+export interface WaitlistEntry {
+  id: string;
+  userId: string;
+  classId: string;
+  classOrResource?: ClassOrResource;
+  startAt: string;
+  createdAt: string;
+}
