@@ -1,30 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { apiFetch } from '@/lib/api';
-import { ClassOrResource } from '@/types';
+import { ClassOrResource, Location } from '@/types';
 
 interface CreateClassModalProps {
   isOpen: boolean;
   gymId: string;
+  locationOptions: Location[];
   onClose: () => void;
   onSuccess: (cls: ClassOrResource) => void;
 }
 
 const DAYS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
-export function CreateClassModal({ isOpen, gymId, onClose, onSuccess }: CreateClassModalProps) {
+export function CreateClassModal({ isOpen, gymId, locationOptions, onClose, onSuccess }: CreateClassModalProps) {
   const [formData, setFormData] = useState({
     name: '',
     capacity: '',
     dayOfWeek: '1',
     startTime: '09:00',
     durationMinutes: '60',
+    locationId: '',
   });
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState('');
+
+  // Preselecciona la primera sucursal apenas se cargan (mismo criterio que
+  // el <select> de día de la semana, siempre parte de un valor válido).
+  useEffect(() => {
+    if (locationOptions.length > 0 && !formData.locationId) {
+      setFormData((prev) => ({ ...prev, locationId: locationOptions[0].id }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locationOptions]);
 
   if (!isOpen) return null;
 
@@ -42,13 +53,21 @@ export function CreateClassModal({ isOpen, gymId, onClose, onSuccess }: CreateCl
           dayOfWeek: parseInt(formData.dayOfWeek, 10),
           startTime: formData.startTime,
           durationMinutes: parseInt(formData.durationMinutes, 10),
+          locationId: formData.locationId,
           gymId,
         }),
       });
 
       const data = await res.json();
       if (res.ok) {
-        setFormData({ name: '', capacity: '', dayOfWeek: '1', startTime: '09:00', durationMinutes: '60' });
+        setFormData({
+          name: '',
+          capacity: '',
+          dayOfWeek: '1',
+          startTime: '09:00',
+          durationMinutes: '60',
+          locationId: locationOptions[0]?.id ?? '',
+        });
         onSuccess(data);
         onClose();
       } else {
@@ -71,6 +90,11 @@ export function CreateClassModal({ isOpen, gymId, onClose, onSuccess }: CreateCl
 
         {error && <div className="p-3 bg-pop-bg text-pop rounded-lg text-sm">{error}</div>}
 
+        {locationOptions.length === 0 ? (
+          <p className="text-sm text-cream-muted">
+            Tu gimnasio todavía no tiene sucursales. Crea una desde Sucursales primero.
+          </p>
+        ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             label="Nombre"
@@ -79,6 +103,20 @@ export function CreateClassModal({ isOpen, gymId, onClose, onSuccess }: CreateCl
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
+
+          <div>
+            <label className="block text-sm font-medium text-cream-muted mb-1.5">Sucursal</label>
+            <select
+              value={formData.locationId}
+              onChange={(e) => setFormData({ ...formData, locationId: e.target.value })}
+              required
+              className="w-full px-4 py-2.5 bg-ink-850 border border-ink-line-strong rounded-xl text-cream focus:outline-none focus:ring-2 focus:ring-neon-400/25 focus:border-neon-400 transition-all text-sm"
+            >
+              {locationOptions.map((location) => (
+                <option key={location.id} value={location.id}>{location.name}</option>
+              ))}
+            </select>
+          </div>
 
           <div>
             <label className="block text-sm font-medium text-cream-muted mb-1.5">Día de la semana</label>
@@ -123,6 +161,7 @@ export function CreateClassModal({ isOpen, gymId, onClose, onSuccess }: CreateCl
             {isCreating ? 'Guardando...' : 'Crear clase'}
           </Button>
         </form>
+        )}
       </div>
     </div>
   );

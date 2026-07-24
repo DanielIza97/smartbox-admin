@@ -21,6 +21,7 @@ export function ShiftTable({ shifts }: ShiftTableProps) {
           <thead className="text-xs uppercase bg-ink-950 text-cream-muted font-semibold border-b border-ink-line-strong">
             <tr>
               <th className="px-6 py-4">Staff</th>
+              <th className="px-6 py-4">Sucursal</th>
               <th className="px-6 py-4">Día</th>
               <th className="px-6 py-4">Desde</th>
               <th className="px-6 py-4">Hasta</th>
@@ -33,6 +34,7 @@ export function ShiftTable({ shifts }: ShiftTableProps) {
                   <td className="px-6 py-4 font-medium text-cream whitespace-nowrap">
                     {shift.staff?.name || '—'}
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap">{shift.location?.name || '—'}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{DAYS[shift.dayOfWeek]}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{shift.startTime}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{shift.endTime}</td>
@@ -40,7 +42,7 @@ export function ShiftTable({ shifts }: ShiftTableProps) {
               ))
             ) : (
               <tr>
-                <td colSpan={4} className="px-6 py-12 text-center text-cream-faint">
+                <td colSpan={5} className="px-6 py-12 text-center text-cream-faint">
                   Todavía no hay turnos de trabajo cargados.
                 </td>
               </tr>

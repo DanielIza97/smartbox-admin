@@ -25,6 +25,7 @@ export function ClassTable({ classes, detailBasePath = '/dashboard/classes' }: C
           <thead className="text-xs uppercase bg-ink-950 text-cream-muted font-semibold border-b border-ink-line-strong">
             <tr>
               <th className="px-6 py-4">Nombre</th>
+              <th className="px-6 py-4">Sucursal</th>
               <th className="px-6 py-4">Día</th>
               <th className="px-6 py-4">Hora</th>
               <th className="px-6 py-4">Duración</th>
@@ -37,6 +38,7 @@ export function ClassTable({ classes, detailBasePath = '/dashboard/classes' }: C
               classes.map((cls) => (
                 <tr key={cls.id} className="hover:bg-ink-950 transition-colors group">
                   <td className="px-6 py-4 font-medium text-cream whitespace-nowrap">{cls.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{cls.location?.name || '—'}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{DAYS[cls.dayOfWeek]}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{cls.startTime}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{cls.durationMinutes} min</td>
@@ -53,7 +55,7 @@ export function ClassTable({ classes, detailBasePath = '/dashboard/classes' }: C
               ))
             ) : (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-cream-faint">
+                <td colSpan={7} className="px-6 py-12 text-center text-cream-faint">
                   Todavía no hay clases configuradas.
                 </td>
               </tr>

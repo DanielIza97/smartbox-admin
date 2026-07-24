@@ -25,6 +25,7 @@ export function Sidebar() {
     { name: 'Clases', path: '/dashboard/classes', icon: '🧘', roles: ['ADMIN', 'STAFF'] },
     { name: 'Reservas', path: '/dashboard/reservations', icon: '📅', roles: ['SUPER_ADMIN', 'ADMIN', 'STAFF'] },
     { name: 'Turnos de Staff', path: '/dashboard/shifts', icon: '🗓️', roles: ['ADMIN', 'STAFF'] },
+    { name: 'Sucursales', path: '/dashboard/locations', icon: '📍', roles: ['ADMIN', 'STAFF'] },
     { name: 'Reportes', path: '/dashboard/reports', icon: '📈', roles: ['ADMIN', 'STAFF'] },
     { name: 'Usuarios y Roles', path: '/dashboard/users', icon: '👥', roles: ['SUPER_ADMIN', 'ADMIN'] },
     { name: 'Historial de Pagos', path: '/dashboard/payments', icon: '💳', roles: ['SUPER_ADMIN', 'ADMIN'], comingSoon: true },

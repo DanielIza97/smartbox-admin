@@ -27,6 +27,9 @@ export function proxy(req: NextRequest) {
     // Turnos de trabajo del STAFF (E4-02) — operativo, sin CLIENT, igual
     // que GET /shifts en el backend.
     '/dashboard/shifts': ['SUPER_ADMIN', 'ADMIN', 'STAFF'],
+    // Sucursales (Fase 1 post-v1.5) — operativo, sin CLIENT, igual que
+    // GET /locations en el backend.
+    '/dashboard/locations': ['SUPER_ADMIN', 'ADMIN', 'STAFF'],
     // Reportes de ocupación/ingresos (E4-03) — GET /reports/revenue es
     // ADMIN-only en el backend, pero la página igual es visible para STAFF
     // (solo ve ocupación); sin CLIENT.

@@ -1,29 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { apiFetch } from '@/lib/api';
-import { Shift, User } from '@/types';
+import { Location, Shift, User } from '@/types';
 
 interface CreateShiftModalProps {
   isOpen: boolean;
   staffOptions: User[];
+  locationOptions: Location[];
   onClose: () => void;
   onSuccess: (shift: Shift) => void;
 }
 
 const DAYS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
-export function CreateShiftModal({ isOpen, staffOptions, onClose, onSuccess }: CreateShiftModalProps) {
+export function CreateShiftModal({ isOpen, staffOptions, locationOptions, onClose, onSuccess }: CreateShiftModalProps) {
   const [formData, setFormData] = useState({
     staffId: '',
     dayOfWeek: '1',
     startTime: '09:00',
     endTime: '17:00',
+    locationId: '',
   });
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (locationOptions.length > 0 && !formData.locationId) {
+      setFormData((prev) => ({ ...prev, locationId: locationOptions[0].id }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locationOptions]);
 
   if (!isOpen) return null;
 
@@ -40,12 +49,19 @@ export function CreateShiftModal({ isOpen, staffOptions, onClose, onSuccess }: C
           dayOfWeek: parseInt(formData.dayOfWeek, 10),
           startTime: formData.startTime,
           endTime: formData.endTime,
+          locationId: formData.locationId,
         }),
       });
 
       const data = await res.json();
       if (res.ok) {
-        setFormData({ staffId: '', dayOfWeek: '1', startTime: '09:00', endTime: '17:00' });
+        setFormData({
+          staffId: '',
+          dayOfWeek: '1',
+          startTime: '09:00',
+          endTime: '17:00',
+          locationId: locationOptions[0]?.id ?? '',
+        });
         onSuccess(data);
         onClose();
       } else {
@@ -72,6 +88,10 @@ export function CreateShiftModal({ isOpen, staffOptions, onClose, onSuccess }: C
           <p className="text-sm text-cream-muted">
             Tu gimnasio todavía no tiene usuarios con rol STAFF. Crea uno desde Usuarios y Roles primero.
           </p>
+        ) : locationOptions.length === 0 ? (
+          <p className="text-sm text-cream-muted">
+            Tu gimnasio todavía no tiene sucursales. Crea una desde Sucursales primero.
+          </p>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -85,6 +105,20 @@ export function CreateShiftModal({ isOpen, staffOptions, onClose, onSuccess }: C
                 <option value="">Selecciona...</option>
                 {staffOptions.map((s) => (
                   <option key={s.id} value={s.id}>{s.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-cream-muted mb-1.5">Sucursal</label>
+              <select
+                value={formData.locationId}
+                onChange={(e) => setFormData({ ...formData, locationId: e.target.value })}
+                required
+                className="w-full px-4 py-2.5 bg-ink-850 border border-ink-line-strong rounded-xl text-cream focus:outline-none focus:ring-2 focus:ring-neon-400/25 focus:border-neon-400 transition-all text-sm"
+              >
+                {locationOptions.map((location) => (
+                  <option key={location.id} value={location.id}>{location.name}</option>
                 ))}
               </select>
             </div>

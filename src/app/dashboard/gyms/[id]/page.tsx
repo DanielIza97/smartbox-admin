@@ -8,6 +8,7 @@ import { MercadoPagoConnectionCard } from '@/components/gyms/MercadoPagoConnecti
 import { PlansSection } from '@/components/plans/PlansSection';
 import { ClassesSection } from '@/components/classes/ClassesSection';
 import { ShiftsSection } from '@/components/shifts/ShiftsSection';
+import { LocationsSection } from '@/components/locations/LocationsSection';
 import { ReportsSection } from '@/components/reports/ReportsSection';
 import { apiFetch } from '@/lib/api';
 import { Gym } from '@/types';
@@ -87,6 +88,8 @@ export default function GymDetailPage() {
                 canManage
                 mercadoPagoConnected={!!gym.mercadoPagoUserId}
               />
+
+              <LocationsSection gymId={gym.id} canManage />
 
               <ClassesSection gymId={gym.id} canManage />
 

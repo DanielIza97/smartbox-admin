@@ -34,6 +34,19 @@ export interface Gym {
   activeMembersCount?: number;
 }
 
+// Sucursal (Fase 1 post-v1.5) — ubicación física dentro de un mismo Gym.
+// Todo gimnasio nace con una "Sucursal Principal" (ver CLAUDE.md del
+// backend). Clases/Turnos/Check-ins quedan atados a una; Plan/Membership
+// no cambian (dan acceso a todas las sucursales del gym).
+export interface Location {
+  id: string;
+  gymId: string;
+  name: string;
+  address?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 // Un gimnasio puede tener varios planes (niveles/tiers, E6-04) — sin
 // descuentos ni cupones todavía, eso quedó fuera del alcance de E6-04.
 export interface Plan {
@@ -83,6 +96,8 @@ export interface Invoice {
 export interface ClassOrResource {
   id: string;
   gymId: string;
+  locationId: string;
+  location?: { id: string; name: string };
   name: string;
   capacity: number;
   // 0 = domingo ... 6 = sábado.
@@ -124,6 +139,8 @@ export interface Shift {
   id: string;
   staffId: string;
   staff?: { id: string; name: string; email?: string; gym?: { id: string } };
+  locationId: string;
+  location?: { id: string; name: string };
   // 0 = domingo ... 6 = sábado.
   dayOfWeek: number;
   startTime: string;
@@ -180,6 +197,8 @@ export interface CheckIn {
   id: string;
   userId: string;
   gymId: string;
+  locationId: string;
+  location?: { id: string; name: string };
   reservationId?: string | null;
   checkedInAt: string;
   checkedOutAt?: string | null;

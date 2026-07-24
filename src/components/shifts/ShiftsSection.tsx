@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ShiftTable } from './ShiftTable';
 import { CreateShiftModal } from './CreateShiftModal';
 import { apiFetch } from '@/lib/api';
-import { Shift, User } from '@/types';
+import { Location, Shift, User } from '@/types';
 
 interface ShiftsSectionProps {
   gymId: string;
@@ -20,6 +20,7 @@ function roleName(user: User): string {
 export function ShiftsSection({ gymId, canManage }: ShiftsSectionProps) {
   const [shifts, setShifts] = useState<Shift[]>([]);
   const [staffOptions, setStaffOptions] = useState<User[]>([]);
+  const [locationOptions, setLocationOptions] = useState<Location[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -56,10 +57,22 @@ export function ShiftsSection({ gymId, canManage }: ShiftsSectionProps) {
     }
   }, [gymId, canManage]);
 
+  const loadLocations = useCallback(async () => {
+    if (!canManage) return;
+    try {
+      const res = await apiFetch('/locations');
+      const data: Location[] = res.ok ? await res.json() : [];
+      setLocationOptions(data.filter((l) => l.gymId === gymId));
+    } catch (error) {
+      console.error('Error al cargar las sucursales:', error);
+    }
+  }, [gymId, canManage]);
+
   useEffect(() => {
     loadShifts();
     loadStaff();
-  }, [loadShifts, loadStaff]);
+    loadLocations();
+  }, [loadShifts, loadStaff, loadLocations]);
 
   return (
     <div className="space-y-4">
@@ -83,15 +96,22 @@ export function ShiftsSection({ gymId, canManage }: ShiftsSectionProps) {
       <CreateShiftModal
         isOpen={isModalOpen}
         staffOptions={staffOptions}
+        locationOptions={locationOptions}
         onClose={() => setIsModalOpen(false)}
         onSuccess={(shift) => {
-          // POST /shifts no devuelve la relación staff — la completamos acá
-          // con lo que ya tenemos en staffOptions, así la tabla no necesita
-          // un refetch para mostrar el nombre.
+          // POST /shifts no devuelve las relaciones staff/location — las
+          // completamos acá con lo que ya tenemos en staffOptions/
+          // locationOptions, así la tabla no necesita un refetch para
+          // mostrar los nombres.
           const staff = staffOptions.find((s) => s.id === shift.staffId);
-          const withStaff = staff ? { ...shift, staff: { id: staff.id, name: staff.name } } : shift;
+          const location = locationOptions.find((l) => l.id === shift.locationId);
+          const withRelations = {
+            ...shift,
+            staff: staff ? { id: staff.id, name: staff.name } : shift.staff,
+            location: location ? { id: location.id, name: location.name } : shift.location,
+          };
           setShifts((prev) =>
-            [...prev, withStaff].sort(
+            [...prev, withRelations].sort(
               (a, b) => a.dayOfWeek - b.dayOfWeek || a.startTime.localeCompare(b.startTime),
             ),
           );

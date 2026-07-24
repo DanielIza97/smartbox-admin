@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ClassTable } from './ClassTable';
 import { CreateClassModal } from './CreateClassModal';
 import { apiFetch } from '@/lib/api';
-import { ClassOrResource } from '@/types';
+import { ClassOrResource, Location } from '@/types';
 
 interface ClassesSectionProps {
   gymId: string;
@@ -17,6 +17,8 @@ interface ClassesSectionProps {
 
 export function ClassesSection({ gymId, canManage, detailBasePath }: ClassesSectionProps) {
   const [classes, setClasses] = useState<ClassOrResource[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [locationFilter, setLocationFilter] = useState('');
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -41,34 +43,81 @@ export function ClassesSection({ gymId, canManage, detailBasePath }: ClassesSect
     }
   }, [gymId]);
 
+  // Sucursales del gym — se usan tanto para el selector del modal de alta
+  // (canManage) como para el filtro de la tabla (visible para cualquier
+  // rol, incluido CLIENT en /portal/classes).
+  const loadLocations = useCallback(async () => {
+    try {
+      const res = await apiFetch('/locations');
+      const data: Location[] = res.ok ? await res.json() : [];
+      setLocations(data.filter((l) => l.gymId === gymId));
+    } catch (error) {
+      console.error('Error al cargar las sucursales:', error);
+    }
+  }, [gymId]);
+
   useEffect(() => {
     loadClasses();
-  }, [loadClasses]);
+    loadLocations();
+  }, [loadClasses, loadLocations]);
+
+  const visibleClasses = locationFilter
+    ? classes.filter((c) => c.locationId === locationFilter)
+    : classes;
 
   return (
     <div className="space-y-4">
-      {canManage && (
-        <div className="flex justify-end">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        {locations.length > 1 ? (
+          <select
+            value={locationFilter}
+            onChange={(e) => setLocationFilter(e.target.value)}
+            className="px-4 py-2 bg-ink-850 border border-ink-line-strong rounded-xl text-sm text-cream focus:outline-none focus:ring-2 focus:ring-neon-400/25 focus:border-neon-400"
+          >
+            <option value="">Todas las sucursales</option>
+            {locations.map((location) => (
+              <option key={location.id} value={location.id}>
+                {location.name}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <div />
+        )}
+
+        {canManage && (
           <button
             onClick={() => setIsModalOpen(true)}
             className="bg-wood-600 hover:bg-wood-500 text-cream font-semibold px-5 py-2.5 rounded-xl shadow-sm transition-all text-sm"
           >
             + Nueva clase
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
       {loading ? (
         <div className="flex items-center justify-center py-12 text-cream-muted">Cargando clases...</div>
       ) : (
-        <ClassTable classes={classes} detailBasePath={detailBasePath} />
+        <ClassTable classes={visibleClasses} detailBasePath={detailBasePath} />
       )}
 
       <CreateClassModal
         isOpen={isModalOpen}
         gymId={gymId}
+        locationOptions={locations}
         onClose={() => setIsModalOpen(false)}
-        onSuccess={(cls) => setClasses((prev) => [...prev, cls].sort((a, b) => a.dayOfWeek - b.dayOfWeek || a.startTime.localeCompare(b.startTime)))}
+        onSuccess={(cls) => {
+          // POST /classes no devuelve la relación location — la completamos
+          // acá con lo que ya tenemos en locations, mismo truco que
+          // ShiftsSection con staff/location.
+          const location = locations.find((l) => l.id === cls.locationId);
+          const withLocation = location ? { ...cls, location: { id: location.id, name: location.name } } : cls;
+          setClasses((prev) =>
+            [...prev, withLocation].sort(
+              (a, b) => a.dayOfWeek - b.dayOfWeek || a.startTime.localeCompare(b.startTime),
+            ),
+          );
+        }}
       />
     </div>
   );
